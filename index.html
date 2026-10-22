@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A* & ALNS 동적 버스 노선 최적화 시뮬레이터</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #F5F2EB;
+            color: #2C3534;
+            overflow-x: hidden;
+        }
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom Scrollbar for Beige Theme */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #EFECE6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #C7C0B3;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2F6F6A;
+        }
+        @keyframes pulseTeal {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(47, 111, 106, 0.35); }
+            50% { box-shadow: 0 0 0 8px rgba(47, 111, 106, 0); }
+        }
+        .pulse-btn {
+            animation: pulseTeal 2s infinite;
+        }
+        canvas {
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#F5F2EB] text-[#2C3534] selection:bg-[#2F6F6A] selection:text-white">
+
+    <!-- 상단 헤더 -->
+    <header class="border-b border-[#E2DDD3] bg-[#FDFBF7]/90 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+            <!-- 로고 및 타이틀 -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#2F6F6A] flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-bus text-[#FDFBF7] text-lg"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-lg md:text-xl font-extrabold tracking-tight text-[#1F2928]">DRT-ALNS 합승 노선 최적화</h1>
+                        <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#2F6F6A]/10 text-[#2F6F6A] border border-[#2F6F6A]/25">A* + ALNS</span>
+                    </div>
+                    <p class="text-xs text-[#6E6A63]">동일 목적지 동승객 자동 매칭 및 실시간 교통 혼잡 우회 시뮬레이터</p>
+                </div>
+            </div>
+
+            <!-- 우측 유틸리티 버튼 -->
+            <div class="flex items-center gap-2">
+                <button onclick="quickRandomStart()" class="px-3.5 py-2 rounded-xl bg-[#EFECE6] hover:bg-[#E4DFD5] text-xs font-semibold text-[#2F6F6A] border border-[#D8D2C5] transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> 랜덤 즉시 시연
+                </button>
+                <button onclick="regenerateGraph()" class="px-3.5 py-2 rounded-xl bg-[#FDFBF7] hover:bg-[#EFECE6] text-xs font-semibold text-[#4A5553] border border-[#D8D2C5] transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-map"></i> 도로 시간 재배치
+                </button>
+                <button onclick="resetAll()" class="px-3.5 py-2 rounded-xl bg-[#FDFBF7] hover:bg-[#F9EBEB] hover:text-[#B84A39] hover:border-[#E6C5C0] text-xs font-semibold text-[#5C5852] border border-[#D8D2C5] transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-rotate-right"></i> 다시 선택
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-5 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+        <!-- 좌측/중앙: 지도 캔버스 & 하단 정거장 방문 순서 (8 cols) -->
+        <section class="lg:col-span-7 xl:col-span-8 flex flex-col gap-4">
+
+            <!-- 상단 상태 가이드 배너 -->
+            <div id="instruction-banner" class="bg-[#FDFBF7] border border-[#DED8CC] rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+                <div class="flex items-center gap-3.5">
+                    <div id="banner-icon" class="w-10 h-10 rounded-xl bg-[#2F6F6A]/10 border border-[#2F6F6A]/25 flex items-center justify-center text-[#2F6F6A] shrink-0">
+                        <i class="fa-solid fa-location-dot text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span id="banner-step-tag" class="text-[11px] font-bold uppercase tracking-wider text-[#2F6F6A]">STEP 1 · 출발 정거장 선택</span>
+                        </div>
+                        <p id="banner-text" class="text-sm font-medium text-[#2C3534] mt-0.5">
+                            지도에서 탑승하실 <span class="text-[#D97724] font-bold underline underline-offset-4">내 출발 정거장</span>을 클릭해 주세요. (0번은 버스 차고지입니다)
+                        </p>
+                    </div>
+                </div>
+                <!-- 진행 게이지 표시 (탐색 시 활성화) -->
+                <div id="algo-status-pill" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#EFECE6] border border-[#DED8CC] text-xs font-semibold text-[#2F6F6A] shrink-0">
+                    <span id="sim-status-dot" class="w-2 h-2 rounded-full bg-[#2F6F6A]"></span>
+                    <span id="sim-status-label">대기 중</span>
+                </div>
+            </div>
+
+            <!-- 인터랙티브 도로망 캔버스 카드 -->
+            <div class="relative bg-[#FDFBF7] border border-[#DED8CC] rounded-2xl overflow-hidden shadow-md">
+                <!-- 상단 범례 오버레이 -->
+                <div class="absolute top-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 pointer-events-none z-10">
+                    <div class="flex flex-wrap items-center gap-3 bg-[#FDFBF7]/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#E2DDD3] text-xs font-medium text-[#4A5553] shadow-sm">
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#33413F] inline-block"></span>차고지(0)</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#D97724] inline-block"></span>내 출발</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#4A8B85] inline-block"></span>AI 승객 출발(3명)</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-[#C8523B] inline-block"></span>공통 도착지</span>
+                        <span class="flex items-center gap-1.5"><span class="w-4 h-1 rounded bg-[#2F6F6A] inline-block"></span>최적 노선</span>
+                        <span class="flex items-center gap-1.5"><span class="w-4 h-1 rounded bg-[#C8523B] inline-block"></span>교통 혼잡</span>
+                    </div>
+                    <div class="bg-[#FDFBF7]/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#E2DDD3] text-[11px] mono text-[#5C5852] shadow-sm">
+                        정거장 <b class="text-[#2F6F6A]">10</b>개 · 간선 <b class="text-[#2F6F6A]">40</b>개 (양방향 20구간)
+                    </div>
+                </div>
+
+                <!-- 캔버스 컨테이너 -->
+                <div id="canvas-container" class="w-full h-[430px] sm:h-[510px] relative">
+                    <canvas id="mapCanvas" class="w-full h-full block cursor-pointer"></canvas>
+                </div>
+
+                <!-- 캔버스 하단 진행 바 & 애니메이션 속도 조절 -->
+                <div class="bg-[#EFECE6]/90 border-t border-[#E2DDD3] px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div class="flex items-center gap-3 flex-1 min-w-[180px]">
+                        <span id="alns-iter-badge" class="mono font-semibold text-[#2F6F6A] shrink-0">준비 완료</span>
+                        <div class="w-full max-w-[200px] bg-[#DED8CC] h-2 rounded-full overflow-hidden">
+                            <div id="algo-progress-bar" class="bg-[#2F6F6A] h-full w-0 transition-all duration-150"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <label class="flex items-center gap-2 text-[#5C5852] font-medium cursor-pointer">
+                            <span>탐색·주행 속도</span>
+                            <input id="speed-slider" type="range" min="0.5" max="2.5" step="0.5" value="1.5" class="w-20 accent-[#2F6F6A] cursor-pointer">
+                            <span id="speed-label" class="mono text-[#2F6F6A] font-bold w-8">1.5x</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 하단: 버스 정거장 방문 순서 타임라인 -->
+            <div class="bg-[#FDFBF7] border border-[#DED8CC] rounded-2xl p-4 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-route text-[#2F6F6A]"></i>
+                        <h2 class="text-sm font-bold text-[#1F2928]">현재 최적 정거장 방문 순서 (A* + ALNS 산출 경로)</h2>
+                    </div>
+                    <span class="text-xs text-[#6E6A63]">
+                        차고지(0) 출발 <i class="fa-solid fa-arrow-right mx-1 text-[10px]"></i> 승객 4명 탑승 <i class="fa-solid fa-arrow-right mx-1 text-[10px]"></i> 공통 도착지 하차
+                    </span>
+                </div>
+
+                <div id="route-sequence-box" class="min-h-[68px] bg-[#F5F2EB] border border-[#E2DDD3] rounded-xl p-3 flex items-center gap-2 overflow-x-auto">
+                    <p class="text-xs text-[#7A756C] mx-auto py-2">
+                        지도에서 <b>출발 정거장</b>과 <b>도착 정거장</b>을 순서대로 클릭하면 AI 동승객 배정 및 최단 경로 탐색이 즉시 시작됩니다.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 우측: ALNS 재탐색 제어판 & 소요시간 비교 & 탑승객 목록 (4 cols) -->
+        <aside class="lg:col-span-5 xl:col-span-4 flex flex-col gap-4">
+
+            <!-- 1. 실시간 교통 변동 & ALNS 재탐색 제어 카드 -->
+            <div class="bg-[#FDFBF7] border border-[#DED8CC] rounded-2xl p-5 shadow-sm flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base font-extrabold text-[#1F2928] flex items-center gap-2">
+                            <i class="fa-solid fa-arrows-spin text-[#2F6F6A]"></i> 실시간 ALNS 경로 재탐색
+                        </h2>
+                        <p class="text-xs text-[#6E6A63] mt-0.5">도로 교통량이 급변할 때 정거장 방문 순서와 우회로를 다시 계산합니다.</p>
+                    </div>
+                </div>
+
+                <!-- 핵심 단일 버튼: ALNS 재탐색 -->
+                <button id="btn-trigger-alns" onclick="triggerTrafficAndReoptimize()" disabled
+                    class="w-full py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition border bg-[#E8E4DB] text-[#9E988E] border-[#DED8CC] cursor-not-allowed">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>교통 혼잡 발생 & ALNS 최단경로 재탐색</span>
+                </button>
+
+                <!-- 연속 자동 시뮬레이션 스위치 -->
+                <div class="flex items-center justify-between bg-[#F5F2EB] px-3.5 py-2.5 rounded-xl border border-[#E2DDD3]">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-[#2F6F6A] text-xs"></i>
+                        <span class="text-xs font-semibold text-[#4A5553]">주기적 실시간 교통 변동 자동 실행</span>
+                    </div>
+                    <button id="btn-auto-sim" onclick="toggleAutoSim()" disabled
+                        class="px-3 py-1 rounded-lg text-xs font-bold bg-[#E2DDD3] text-[#8C867B] transition cursor-not-allowed">
+                        OFF
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. 소요시간 비교 지표 카드 -->
+            <div class="bg-[#FDFBF7] border border-[#DED8CC] rounded-2xl p-5 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-sm font-bold text-[#1F2928] flex items-center gap-2">
+                        <i class="fa-solid fa-gauge-high text-[#2F6F6A]"></i> 총 운행 소요시간 비교
+                    </h2>
+                    <span id="reopt-count-badge" class="text-xs mono font-semibold px-2 py-0.5 rounded-md bg-[#EFECE6] text-[#2F6F6A]">재탐색 0회</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- 최적화 전 / 기존 노선 유지 시 -->
+                    <div class="bg-[#F5F2EB] border border-[#E2DDD3] rounded-xl p-3.5">
+                        <div class="text-xs text-[#6E6A63] font-medium flex items-center justify-between">
+                            <span id="metric-old-title">최적화 전 (단순 방문)</span>
+                            <i class="fa-regular fa-clock text-[#B84A39]"></i>
+                        </div>
+                        <div class="mt-1.5 flex items-baseline gap-1">
+                            <span id="metric-old-cost" class="text-2xl font-extrabold mono text-[#5C5852]">--</span>
+                            <span class="text-xs text-[#6E6A63]">분</span>
+                        </div>
+                        <div id="metric-old-sub" class="text-[11px] text-[#8C867B] mt-1">정거장 선택 대기</div>
+                    </div>
+
+                    <!-- ALNS 최적화 후 -->
+                    <div class="bg-[#2F6F6A]/10 border border-[#2F6F6A]/30 rounded-xl p-3.5">
+                        <div class="text-xs text-[#2F6F6A] font-bold flex items-center justify-between">
+                            <span>ALNS 최적 노선</span>
+                            <i class="fa-solid fa-check-circle text-[#2F6F6A]"></i>
+                        </div>
+                        <div class="mt-1.5 flex items-baseline gap-1">
+                            <span id="metric-new-cost" class="text-2xl font-extrabold mono text-[#2F6F6A]">--</span>
+                            <span class="text-xs text-[#2F6F6A] font-semibold">분</span>
+                        </div>
+                        <div id="metric-saved-badge" class="text-[11px] text-[#2F6F6A] font-bold mt-1">대기 중</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 합승 승객 현황 (내 출발지 + AI 3명 출발지 -> 공통 도착지) -->
+            <div class="bg-[#FDFBF7] border border-[#DED8CC] rounded-2xl p-5 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <h2 class="text-sm font-bold text-[#1F2928] flex items-center gap-2">
+                            <i class="fa-solid fa-users text-[#2F6F6A]"></i> 탑승 승객 및 공통 목적지
+                        </h2>
+                        <p class="text-[11px] text-[#6E6A63] mt-0.5">AI 승객 3명은 내가 선택한 도착지로 함께 이동합니다.</p>
+                    </div>
+                    <button id="btn-reroll-ai" onclick="rerollAIPassengers()" class="hidden text-xs font-semibold text-[#2F6F6A] hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-dice"></i> AI 위치 변경
+                    </button>
+                </div>
+
+                <!-- 공통 도착지 배지 -->
+                <div id="shared-dest-box" class="mb-3 px-3.5 py-2.5 rounded-xl bg-[#F5F2EB] border border-[#E2DDD3] flex items-center justify-between">
+                    <span class="text-xs font-semibold text-[#5C5852] flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#C8523B]"></span>
+                        공통 도착 정거장 (종착지)
+                    </span>
+                    <span id="shared-dest-label" class="text-xs font-bold mono text-[#7A756C]">미선택</span>
+                </div>
+
+                <!-- 승객별 출발지 리스트 -->
+                <div id="passenger-list" class="flex flex-col gap-2">
+                    <!-- JS 렌더링 -->
+                </div>
+            </div>
+
+        </aside>
+    </main>
+
+    <script>
+        /***********************************************************************
+         * 1. 색상 테마 및 그래프 기본 데이터 설정
+         ***********************************************************************/
+        const THEME = {
+            edgeDefault: 'rgba(47, 111, 106, 0.28)',   // 기본 간선 (#2F6F6A 투명도)
+            edgeRoute: '#2F6F6A',                      // 활성 최적 노선 (#2F6F6A)
+            edgeAStar: '#D97724',                      // A* 탐색 하이라이트 (앰버/골드)
+            edgeCongested: '#C8523B',                  // 혼잡 도로 (테라코타 코랄)
+            edgeCandidate: 'rgba(47, 111, 106, 0.55)', // ALNS 후보 탐색 점선
+            nodeFill: '#FFFDF9',                       // 기본 정거장 내부
+            nodeStroke: '#2F6F6A',                     // 기본 정거장 테두리
+            depotFill: '#33413F',                      // 0번 차고지
+            userOrigin: '#D97724',                     // 내 출발지 (따뜻한 오커/앰버)
+            sharedDest: '#C8523B',                     // 공통 도착지 (테라코타 레드)
+            aiOrigin: '#4A8B85'                        // AI 승객 출발지 (세이지 틸)
+        };
+
+        const canvas = document.getElementById('mapCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 10개 정거장 비율 좌표
+        const NODE_LAYOUT = [
+            { id: 0, name: '차고지(0)', rx: 0.09, ry: 0.50 },
+            { id: 1, name: '정거장 1', rx: 0.24, ry: 0.18 },
+            { id: 2, name: '정거장 2', rx: 0.25, ry: 0.82 },
+            { id: 3, name: '정거장 3', rx: 0.42, ry: 0.36 },
+            { id: 4, name: '정거장 4', rx: 0.43, ry: 0.66 },
+            { id: 5, name: '정거장 5', rx: 0.58, ry: 0.16 },
+            { id: 6, name: '정거장 6', rx: 0.60, ry: 0.84 },
+            { id: 7, name: '정거장 7', rx: 0.74, ry: 0.42 },
+            { id: 8, name: '정거장 8', rx: 0.77, ry: 0.72 },
+            { id: 9, name: '정거장 9', rx: 0.91, ry: 0.48 }
+        ];
+
+        // 20개 양방향 구간 = 40개 방향성 간선
+        const BASE_UNDIRECTED_EDGES = [
+            [0, 1], [0, 2], [0, 3], [0, 4],
+            [1, 3], [1, 5], [1, 2],
+            [2, 4], [2, 6],
+            [3, 4], [3, 5], [3, 7],
+            [4, 6], [4, 7], [4, 8],
+            [5, 7], [5, 9],
+            [6, 8],
+            [7, 8], [7, 9]
+        ];
+
+        let nodes = [];
+        let edges = [];
+        let adj = {};
+
+        // 사용자 및 AI 승객 상태 (모두 동일한 sharedDestination으로 이동)
+        let userOrigin = null;
+        let sharedDestination = null;
+        let aiPassengers = []; // [{ id: 'A'|'B'|'C', label: 'AI 승객 A', from: 정거장번호 }]
+
+        // A* 최단경로 행렬
+        let costMatrix = {};
+        let pathMatrix = {};
+
+        // 현재 최적 정거장 시퀀스 및 전체 도로 시퀀스
+        let currentStopSequence = []; // 예: [0, 2, 4, 1, 5, 9]
+        let currentFullRoadPath = []; // 실제 도로 노드 연결 배열
+        let currentRouteEdges = new Set();
+
+        // 애니메이션 상태
+        let activeAStarEdges = new Set();
+        let activeAStarNodes = new Set();
+        let candidateSequence = null;
+        let busAnimProgress = 0;
+        let busAnimReq = null;
+        let isAnimating = false;
+        let autoSimTimer = null;
+        let reoptCount = 0;
+        let hoveredNodeId = null;
+
+        /***********************************************************************
+         * 2. 그래프 초기화 및 반응형 캔버스 설정
+         ***********************************************************************/
+        function initGraph() {
+            nodes = NODE_LAYOUT.map(n => ({ ...n, x: 0, y: 0 }));
+            edges = [];
+            adj = {};
+            for (let i = 0; i < 10; i++) adj[i] = [];
+
+            BASE_UNDIRECTED_EDGES.forEach(([u, v]) => {
+                const dx = NODE_LAYOUT[u].rx - NODE_LAYOUT[v].rx;
+                const dy = NODE_LAYOUT[u].ry - NODE_LAYOUT[v].ry;
+                const dist = Math.hypot(dx, dy);
+                const baseW = Math.max(3, Math.round(dist * 18) + Math.floor(Math.random() * 3));
+
+                const edgeObj = {
+                    u, v,
+                    baseWeight: baseW,
+                    weight: baseW,
+                    status: 'normal'
+                };
+                edges.push(edgeObj);
+                adj[u].push({ to: v, edge: edgeObj });
+                adj[v].push({ to: u, edge: edgeObj });
+            });
+
+            updateCanvasSize();
+            renderPassengerList();
+            drawMap();
+        }
+
+        function updateCanvasSize() {
+            const container = document.getElementById('canvas-container');
+            const rect = container.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            const padX = 42;
+            const padY = 52;
+            const usableW = rect.width - padX * 2;
+            const usableH = rect.height - padY * 2;
+
+            nodes.forEach(n => {
+                n.x = padX + n.rx * usableW;
+                n.y = padY + n.ry * usableH;
+            });
+            drawMap();
+        }
+
+        window.addEventListener('resize', updateCanvasSize);
+
+        function edgeKey(u, v) {
+            return u < v ? `${u}-${v}` : `${v}-${u}`;
+        }
+
+        /***********************************************************************
+         * 3. 캔버스 렌더링 (베이지 & #2F6F6A 테마)
+         ***********************************************************************/
+        function drawMap() {
+            const rect = canvas.getBoundingClientRect();
+            const W = rect.width;
+            const H = rect.height;
+
+            ctx.clearRect(0, 0, W, H);
+
+            // 배경 도트 그리드 (베이지 톤과 어울리는 은은한 패턴)
+            ctx.fillStyle = 'rgba(180, 172, 158, 0.35)';
+            const step = 32;
+            for (let x = 20; x < W; x += step) {
+                for (let y = 20; y < H; y += step) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, 1.2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // 1) 모든 도로(간선) 그리기
+            edges.forEach(e => {
+                const n1 = nodes[e.u];
+                const n2 = nodes[e.v];
+                const key = edgeKey(e.u, e.v);
+                const isOnRoute = currentRouteEdges.has(key);
+                const isAStarActive = activeAStarEdges.has(key);
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(n1.x, n1.y);
+                ctx.lineTo(n2.x, n2.y);
+
+                if (isAStarActive) {
+                    ctx.strokeStyle = THEME.edgeAStar;
+                    ctx.lineWidth = 5;
+                    ctx.shadowColor = 'rgba(217, 119, 36, 0.45)';
+                    ctx.shadowBlur = 10;
+                } else if (e.status === 'congested') {
+                    ctx.strokeStyle = THEME.edgeCongested;
+                    ctx.lineWidth = isOnRoute ? 5.5 : 3.5;
+                    ctx.setLineDash([8, 6]);
+                } else if (isOnRoute) {
+                    ctx.strokeStyle = THEME.edgeRoute; // #2F6F6A
+                    ctx.lineWidth = 5.5;
+                    ctx.shadowColor = 'rgba(47, 111, 106, 0.35)';
+                    ctx.shadowBlur = 10;
+                } else {
+                    ctx.strokeStyle = THEME.edgeDefault; // 연한 #2F6F6A
+                    ctx.lineWidth = 2.2;
+                }
+                ctx.stroke();
+                ctx.restore();
+            });
+
+            // 2) ALNS 탐색 중 후보 시퀀스 표시
+            if (candidateSequence && candidateSequence.length > 1) {
+                ctx.save();
+                ctx.strokeStyle = THEME.edgeCandidate;
+                ctx.lineWidth = 3;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                for (let i = 0; i < candidateSequence.length - 1; i++) {
+                    const u = candidateSequence[i];
+                    const v = candidateSequence[i + 1];
+                    const subPath = (pathMatrix[u] && pathMatrix[u][v]) ? pathMatrix[u][v] : [u, v];
+                    for (let j = 0; j < subPath.length - 1; j++) {
+                        const p1 = nodes[subPath[j]];
+                        const p2 = nodes[subPath[j + 1]];
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                    }
+                }
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // 3) 간선 가중치(소요시간) 라벨
+            edges.forEach(e => {
+                const n1 = nodes[e.u];
+                const n2 = nodes[e.v];
+                const mx = (n1.x + n2.x) / 2;
+                const my = (n1.y + n2.y) / 2;
+                const key = edgeKey(e.u, e.v);
+                const isOnRoute = currentRouteEdges.has(key);
+
+                const label = `${e.weight}분`;
+                ctx.save();
+                ctx.font = '600 10px "JetBrains Mono", monospace';
+                const textW = ctx.measureText(label).width;
+                const boxW = textW + 10;
+                const boxH = 17;
+
+                if (e.status === 'congested') {
+                    ctx.fillStyle = '#FDF2F0';
+                    ctx.strokeStyle = THEME.edgeCongested;
+                } else if (isOnRoute) {
+                    ctx.fillStyle = '#2F6F6A';
+                    ctx.strokeStyle = '#2F6F6A';
+                } else {
+                    ctx.fillStyle = '#FDFBF7';
+                    ctx.strokeStyle = '#D5CFC2';
+                }
+
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.roundRect(mx - boxW / 2, my - boxH / 2, boxW, boxH, 5);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = e.status === 'congested'
+                    ? '#B83B24'
+                    : (isOnRoute ? '#FFFFFF' : '#5C6462');
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(label, mx, my + 0.5);
+                ctx.restore();
+            });
+
+            // 4) 정거장 노드 그리기
+            nodes.forEach(n => {
+                const isDepot = n.id === 0;
+                const isUserFrom = userOrigin === n.id;
+                const isDest = sharedDestination === n.id;
+                const aiHere = aiPassengers.filter(p => p.from === n.id);
+                const isAIOrigin = aiHere.length > 0;
+                const isAStarNode = activeAStarNodes.has(n.id);
+                const isHovered = hoveredNodeId === n.id;
+                const isOnStopSeq = currentStopSequence.includes(n.id);
+
+                ctx.save();
+                const radius = isHovered ? 20 : 17;
+
+                // 부드러운 외곽 링 효과
+                if (isUserFrom || isDest || isAIOrigin || isAStarNode) {
+                    ctx.beginPath();
+                    ctx.arc(n.x, n.y, radius + 6, 0, Math.PI * 2);
+                    if (isDest) ctx.fillStyle = 'rgba(200, 82, 59, 0.22)';
+                    else if (isUserFrom) ctx.fillStyle = 'rgba(217, 119, 36, 0.24)';
+                    else if (isAIOrigin) ctx.fillStyle = 'rgba(47, 111, 106, 0.20)';
+                    else ctx.fillStyle = 'rgba(217, 119, 36, 0.20)';
+                    ctx.fill();
+                }
+
+                // 정거장 원형 본체
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, radius, 0, Math.PI * 2);
+
+                if (isDest) {
+                    ctx.fillStyle = THEME.sharedDest;
+                    ctx.strokeStyle = '#8F3220';
+                } else if (isUserFrom) {
+                    ctx.fillStyle = THEME.userOrigin;
+                    ctx.strokeStyle = '#9E5010';
+                } else if (isAIOrigin) {
+                    ctx.fillStyle = THEME.aiOrigin;
+                    ctx.strokeStyle = '#2F6F6A';
+                } else if (isDepot) {
+                    ctx.fillStyle = THEME.depotFill;
+                    ctx.strokeStyle = '#1F2928';
+                } else if (isOnStopSeq) {
+                    ctx.fillStyle = '#E6F0EF';
+                    ctx.strokeStyle = '#2F6F6A';
+                } else {
+                    ctx.fillStyle = THEME.nodeFill;
+                    ctx.strokeStyle = THEME.nodeStroke;
+                }
+
+                ctx.lineWidth = 2.5;
+                ctx.fill();
+                ctx.stroke();
+
+                // 정거장 번호 텍스트
+                const isDarkBg = isDest || isUserFrom || isAIOrigin || isDepot;
+                ctx.fillStyle = isDarkBg ? '#FFFFFF' : '#1F2928';
+                ctx.font = '800 13px "Pretendard", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(n.id, n.x, n.y);
+
+                // 정거장 하단 이름
+                ctx.font = '600 11px "Pretendard", sans-serif';
+                ctx.fillStyle = '#4A5553';
+                ctx.fillText(n.id === 0 ? '차고지(0)' : `정거장 ${n.id}`, n.x, n.y + radius + 13);
+
+                // 정거장 상단 승하차 배지 표시
+                const badges = [];
+                if (isDest) badges.push({ text: '공통 도착지', bg: THEME.sharedDest, fg: '#FFF' });
+                if (isUserFrom) badges.push({ text: '내 출발', bg: THEME.userOrigin, fg: '#FFF' });
+                if (isAIOrigin) {
+                    const names = aiHere.map(p => p.id).join('·');
+                    badges.push({ text: `승객 ${names} 출발`, bg: '#2F6F6A', fg: '#FFF' });
+                }
+
+                badges.forEach((b, idx) => {
+                    const by = n.y - radius - 11 - (idx * 17);
+                    ctx.font = '700 10px "Pretendard", sans-serif';
+                    const tw = ctx.measureText(b.text).width + 10;
+                    ctx.fillStyle = b.bg;
+                    ctx.beginPath();
+                    ctx.roundRect(n.x - tw / 2, by - 7.5, tw, 15, 4);
+                    ctx.fill();
+                    ctx.fillStyle = b.fg;
+                    ctx.fillText(b.text, n.x, by);
+                });
+
+                ctx.restore();
+            });
+
+            // 5) 주행 중인 버스 아이콘
+            if (currentFullRoadPath.length > 1) {
+                drawMovingBus();
+            }
+        }
+
+        function drawMovingBus() {
+            const totalSegments = currentFullRoadPath.length - 1;
+            const exactPos = busAnimProgress * totalSegments;
+            const segIdx = Math.min(Math.floor(exactPos), totalSegments - 1);
+            const t = exactPos - segIdx;
+
+            const n1 = nodes[currentFullRoadPath[segIdx]];
+            const n2 = nodes[currentFullRoadPath[segIdx + 1]];
+            if (!n1 || !n2) return;
+
+            const bx = n1.x + (n2.x - n1.x) * t;
+            const by = n1.y + (n2.y - n1.y) * t;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(bx, by, 13, 0, Math.PI * 2);
+            ctx.fillStyle = '#2F6F6A';
+            ctx.shadowColor = 'rgba(47, 111, 106, 0.5)';
+            ctx.shadowBlur = 12;
+            ctx.fill();
+
+            ctx.lineWidth = 2.5;
+            ctx.strokeStyle = '#FDFBF7';
+            ctx.stroke();
+
+            ctx.fillStyle = '#FDFBF7';
+            ctx.font = '900 11px "Font Awesome 6 Free"';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('\uf207', bx, by + 0.5);
+            ctx.restore();
+        }
+
+        function startBusLoop() {
+            if (busAnimReq) cancelAnimationFrame(busAnimReq);
+            function step() {
+                if (currentFullRoadPath.length > 1 && !isAnimating) {
+                    const speed = parseFloat(document.getElementById('speed-slider').value) || 1.5;
+                    busAnimProgress += 0.0024 * speed;
+                    if (busAnimProgress > 1) busAnimProgress = 0;
+                    drawMap();
+                }
+                busAnimReq = requestAnimationFrame(step);
+            }
+            busAnimReq = requestAnimationFrame(step);
+        }
+
+        /***********************************************************************
+         * 4. 사용자 정거장 클릭 -> AI 자동 배정 -> A* & 초기 ALNS 즉시 실행
+         ***********************************************************************/
+        function getClickedNode(evt) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+            const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            for (const n of nodes) {
+                if (Math.hypot(n.x - x, n.y - y) <= 24) return n;
+            }
+            return null;
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            const n = getClickedNode(e);
+            const newHover = n ? n.id : null;
+            if (newHover !== hoveredNodeId) {
+                hoveredNodeId = newHover;
+                canvas.style.cursor = hoveredNodeId !== null ? 'pointer' : 'default';
+                drawMap();
+            }
+        });
+
+        canvas.addEventListener('click', (e) => {
+            if (isAnimating) return;
+            const clicked = getClickedNode(e);
+            if (!clicked) return;
+            handleNodeClick(clicked.id);
+        });
+
+        function handleNodeClick(nodeId) {
+            // 1) 아직 출발지를 고르지 않았거나, 이미 완료된 상태에서 새로 클릭한 경우 -> 출발지로 지정
+            if (userOrigin === null || (userOrigin !== null && sharedDestination !== null)) {
+                if (autoSimTimer) toggleAutoSim();
+                resetRouteStateOnly();
+
+                userOrigin = nodeId;
+                sharedDestination = null;
+                aiPassengers = [];
+
+                updateBanner(
+                    'STEP 2 · 공통 도착 정거장 선택',
+                    `내 출발지(<b class="text-[#D97724]">정거장 ${nodeId}</b>)가 선택되었습니다. 이제 이동하실 <span class="text-[#C8523B] font-bold underline underline-offset-4">도착 정거장</span>을 클릭하면 AI 승객 매칭과 경로 탐색이 바로 시작됩니다.`
+                );
+                renderPassengerList();
+                drawMap();
+                return;
+            }
+
+            // 2) 출발지와 동일한 노드를 클릭한 경우
+            if (userOrigin === nodeId) {
+                updateBanner(
+                    '안내 · 다른 정거장을 선택해 주세요',
+                    `출발지(정거장 ${userOrigin})와 다른 <span class="text-[#C8523B] font-bold">도착 정거장</span>을 클릭해 주세요.`
+                );
+                return;
+            }
+
+            // 3) 도착지 선택 완료 -> AI 승객 3명 출발지 랜덤 배정 후 즉시 A* & ALNS 애니메이션 실행!
+            sharedDestination = nodeId;
+            assignRandomAIOrigins();
+            renderPassengerList();
+            drawMap();
+
+            // 자동으로 A* 및 초기 ALNS 실행
+            runInitialAStarAndALNS();
+        }
+
+        // AI 승객 3명의 출발지만 랜덤 선택 (도착지는 사용자의 도착지와 동일)
+        function assignRandomAIOrigins() {
+            // 0번 차고지와 공통 도착지를 제외한 정거장 후보 (부족하면 0번 외 전체에서 선택)
+            let pool = nodes
+                .map(n => n.id)
+                .filter(id => id !== sharedDestination && id !== 0 && id !== userOrigin);
+
+            if (pool.length < 3) {
+                pool = nodes.map(n => n.id).filter(id => id !== sharedDestination);
+            }
+
+            const shuffled = [...pool].sort(() => Math.random() - 0.5);
+            const labels = ['A', 'B', 'C'];
+
+            aiPassengers = labels.map((id, idx) => ({
+                id,
+                label: `AI 동승객 ${id}`,
+                from: shuffled[idx % shuffled.length],
+                to: sharedDestination
+            }));
+
+            document.getElementById('btn-reroll-ai').classList.remove('hidden');
+        }
+
+        function rerollAIPassengers() {
+            if (isAnimating || userOrigin === null || sharedDestination === null) return;
+            assignRandomAIOrigins();
+            renderPassengerList();
+            drawMap();
+            runInitialAStarAndALNS();
+        }
+
+        function quickRandomStart() {
+            if (isAnimating) return;
+            if (autoSimTimer) toggleAutoSim();
+            resetRouteStateOnly();
+
+            // 1~9번 정거장 중 출발지/도착지 랜덤 선택
+            const stopIds = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            const shuffled = stopIds.sort(() => Math.random() - 0.5);
+            userOrigin = shuffled[0];
+            sharedDestination = shuffled[1];
+
+            assignRandomAIOrigins();
+            renderPassengerList();
+            drawMap();
+            runInitialAStarAndALNS();
+        }
+
+        function renderPassengerList() {
+            const destLabel = document.getElementById('shared-dest-label');
+            if (sharedDestination !== null) {
+                destLabel.textContent = `정거장 ${sharedDestination}`;
+                destLabel.className = 'text-xs font-extrabold mono px-2.5 py-0.5 rounded bg-[#C8523B] text-white';
+            } else {
+                destLabel.textContent = '미선택';
+                destLabel.className = 'text-xs font-bold mono text-[#7A756C]';
+            }
+
+            const container = document.getElementById('passenger-list');
+            const rows = [
+                {
+                    name: '나 (접속 사용자)',
+                    dotColor: '#D97724',
+                    from: userOrigin,
+                    tagStyle: 'bg-[#D97724]/15 text-[#B55D14] border-[#D97724]/30'
+                },
+                ...aiPassengers.map(p => ({
+                    name: p.label,
+                    dotColor: '#2F6F6A',
+                    from: p.from,
+                    tagStyle: 'bg-[#2F6F6A]/15 text-[#2F6F6A] border-[#2F6F6A]/30'
+                }))
+            ];
+
+            if (aiPassengers.length === 0) {
+                // 아직 AI 매칭 전일 때 자리 표시자
+                ['A', 'B', 'C'].forEach(id => {
+                    rows.push({
+                        name: `AI 동승객 ${id}`,
+                        dotColor: '#9CA3AF',
+                        from: null,
+                        tagStyle: ''
+                    });
+                });
+            }
+
+            container.innerHTML = rows.map(r => `
+                <div class="flex items-center justify-between bg-[#F5F2EB] border border-[#E2DDD3] rounded-xl px-3.5 py-2.5">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${r.dotColor}"></span>
+                        <span class="text-xs font-bold text-[#2C3534]">${r.name}</span>
+                    </div>
+                    ${r.from !== null ? `
+                        <div class="flex items-center gap-1.5 mono text-xs">
+                            <span class="px-2 py-0.5 rounded-md border ${r.tagStyle} font-bold">출발: 정거장 ${r.from}</span>
+                            <i class="fa-solid fa-arrow-right text-[#8C867B] text-[10px]"></i>
+                            <span class="text-[11px] font-bold text-[#C8523B]">도착 ${sharedDestination !== null ? sharedDestination : '?'}</span>
+                        </div>
+                    ` : `
+                        <span class="text-[11px] text-[#8C867B]">도착지 선택 시 자동 배정</span>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        /***********************************************************************
+         * 5. A* 최단 경로 탐색 및 ALNS (동일 목적지 합승 픽업 순서 최적화)
+         ***********************************************************************/
+        function heuristic(u, v) {
+            const dx = NODE_LAYOUT[u].rx - NODE_LAYOUT[v].rx;
+            const dy = NODE_LAYOUT[u].ry - NODE_LAYOUT[v].ry;
+            return Math.hypot(dx, dy) * 10;
+        }
+
+        function astarSearch(start, goal) {
+            if (start === goal) return { cost: 0, path: [start] };
+
+            const openSet = new Set([start]);
+            const cameFrom = {};
+            const gScore = {};
+            const fScore = {};
+
+            for (let i = 0; i < 10; i++) {
+                gScore[i] = Infinity;
+                fScore[i] = Infinity;
+            }
+            gScore[start] = 0;
+            fScore[start] = heuristic(start, goal);
+
+            while (openSet.size > 0) {
+                let current = null;
+                let bestF = Infinity;
+                for (const node of openSet) {
+                    if (fScore[node] < bestF) {
+                        bestF = fScore[node];
+                        current = node;
+                    }
+                }
+
+                if (current === goal) {
+                    const path = [current];
+                    while (cameFrom[current] !== undefined) {
+                        current = cameFrom[current];
+                        path.unshift(current);
+                    }
+                    return { cost: gScore[goal], path };
+                }
+
+                openSet.delete(current);
+
+                for (const neighbor of adj[current]) {
+                    const nextNode = neighbor.to;
+                    const tentativeG = gScore[current] + neighbor.edge.weight;
+                    if (tentativeG < gScore[nextNode]) {
+                        cameFrom[nextNode] = current;
+                        gScore[nextNode] = tentativeG;
+                        fScore[nextNode] = tentativeG + heuristic(nextNode, goal);
+                        openSet.add(nextNode);
+                    }
+                }
+            }
+            return { cost: Infinity, path: [] };
+        }
+
+        function computeAllPairsAStar() {
+            costMatrix = {};
+            pathMatrix = {};
+            for (let u = 0; u < 10; u++) {
+                costMatrix[u] = {};
+                pathMatrix[u] = {};
+                for (let v = 0; v < 10; v++) {
+                    const res = astarSearch(u, v);
+                    costMatrix[u][v] = res.cost;
+                    pathMatrix[u][v] = res.path;
+                }
+            }
+        }
+
+        // 모든 승객(나 + AI A, B, C)의 출발 정거장 목록을 기반으로
+        // [차고지(0) -> 픽업 정거장들 방문 -> 공통 도착지(sharedDestination)] 시퀀스 생성
+        function getInitialPickupStops() {
+            const stops = [userOrigin, ...aiPassengers.map(p => p.from)];
+            // 중복 정거장 제거
+            return Array.from(new Set(stops));
+        }
+
+        function buildFullStopSequence(pickupOrder) {
+            const seq = [0]; // 차고지 출발
+            pickupOrder.forEach(s => {
+                if (seq[seq.length - 1] !== s) seq.push(s);
+            });
+            if (seq[seq.length - 1] !== sharedDestination) {
+                seq.push(sharedDestination);
+            }
+            return seq;
+        }
+
+        function evaluatePickupOrder(pickupOrder) {
+            const seq = buildFullStopSequence(pickupOrder);
+            let total = 0;
+            for (let i = 0; i < seq.length - 1; i++) {
+                total += costMatrix[seq[i]][seq[i + 1]];
+            }
+            return total;
+        }
+
+        // ALNS Destroy 연산자: 픽업 정거장 중 1~2개를 무작위로 제거
+        function alnsDestroy(pickupOrder) {
+            const count = Math.min(pickupOrder.length, Math.random() < 0.5 ? 1 : 2);
+            const indices = pickupOrder.map((_, idx) => idx).sort(() => Math.random() - 0.5);
+            const removeSet = new Set(indices.slice(0, count));
+
+            const remaining = [];
+            const removed = [];
+            pickupOrder.forEach((stopId, idx) => {
+                if (removeSet.has(idx)) removed.push(stopId);
+                else remaining.push(stopId);
+            });
+            return { remaining, removed };
+        }
+
+        // ALNS Greedy Repair 연산자: 제거된 픽업 정거장을 가장 비용 증가가 적은 위치에 삽입
+        function alnsRepair(remaining, removed) {
+            let current = [...remaining];
+            for (const stopId of removed) {
+                let bestCandidate = null;
+                let bestCost = Infinity;
+
+                for (let pos = 0; pos <= current.length; pos++) {
+                    const trial = [...current];
+                    trial.splice(pos, 0, stopId);
+                    const cost = evaluatePickupOrder(trial) + Math.random() * 0.01;
+                    if (cost < bestCost) {
+                        bestCost = cost;
+                        bestCandidate = trial;
+                    }
+                }
+                current = bestCandidate;
+            }
+            return current;
+        }
+
+        /***********************************************************************
+         * 6. 애니메이션 루틴: 초기 A* + ALNS 및 실시간 혼잡 재탐색
+         ***********************************************************************/
+        function sleep(ms) {
+            const speed = parseFloat(document.getElementById('speed-slider').value) || 1.5;
+            return new Promise(res => setTimeout(res, ms / speed));
+        }
+
+        async function runInitialAStarAndALNS() {
+            if (isAnimating) return;
+            isAnimating = true;
+            setSimStatus('A* 최단경로 탐색 중...', true);
+
+            updateBanner(
+                'STEP 3 · A* 최단거리 탐색 및 ALNS 노선 생성 중',
+                `AI 동승객 3명(승객 A·B·C)이 매칭되었습니다! <b class="text-[#2F6F6A]">A* 알고리즘</b>으로 정거장 간 최단 도로를 찾고 <b class="text-[#2F6F6A]">ALNS</b>로 방문 순서를 최적화합니다.`
+            );
+
+            computeAllPairsAStar();
+
+            // 1) A* 시각적 스캔 애니메이션
+            const keyNodes = [0, userOrigin, ...aiPassengers.map(p => p.from), sharedDestination];
+            const uniqueKeyNodes = Array.from(new Set(keyNodes));
+
+            for (let i = 0; i < uniqueKeyNodes.length - 1; i++) {
+                const u = uniqueKeyNodes[i];
+                const v = uniqueKeyNodes[i + 1];
+                const res = astarSearch(u, v);
+
+                activeAStarNodes.clear();
+                activeAStarEdges.clear();
+                res.path.forEach(id => activeAStarNodes.add(id));
+                for (let k = 0; k < res.path.length - 1; k++) {
+                    activeAStarEdges.add(edgeKey(res.path[k], res.path[k + 1]));
+                }
+                setProgressBar(((i + 1) / (uniqueKeyNodes.length - 1)) * 45);
+                drawMap();
+                await sleep(190);
+            }
+
+            activeAStarNodes.clear();
+            activeAStarEdges.clear();
+
+            // 2) ALNS 초기 픽업 순서 탐색
+            setSimStatus('ALNS 최적 방문순서 계산 중...', true);
+            let currentOrder = getInitialPickupStops();
+            // 초기 비교용으로 역순/비효율 순서의 비용도 함께 확인
+            const naiveCost = Math.max(
+                evaluatePickupOrder(currentOrder),
+                evaluatePickupOrder([...currentOrder].reverse())
+            );
+
+            let bestOrder = [...currentOrder];
+            let bestCost = evaluatePickupOrder(bestOrder);
+
+            const totalIter = 16;
+            for (let iter = 1; iter <= totalIter; iter++) {
+                document.getElementById('alns-iter-badge').textContent = `ALNS 탐색 ${iter}/${totalIter}`;
+                setProgressBar(45 + (iter / totalIter) * 55);
+
+                const { remaining, removed } = alnsDestroy(currentOrder);
+                const repaired = alnsRepair(remaining, removed);
+                const cost = evaluatePickupOrder(repaired);
+
+                candidateSequence = buildFullStopSequence(repaired);
+                drawMap();
+
+                if (cost < bestCost) {
+                    bestCost = cost;
+                    bestOrder = [...repaired];
+                    currentOrder = [...repaired];
+                } else if (Math.random() < 0.25) {
+                    currentOrder = [...repaired];
+                }
+                await sleep(85);
+            }
+
+            candidateSequence = null;
+            applyBestPickupOrder(bestOrder);
+
+            // 지표 업데이트
+            document.getElementById('metric-old-title').textContent = '초기 단순 방문 시';
+            document.getElementById('metric-old-cost').textContent = `${naiveCost}`;
+            document.getElementById('metric-old-sub').textContent = '최적화 전 기본 경로';
+            document.getElementById('metric-new-cost').textContent = `${bestCost}`;
+            const saved = Math.max(0, naiveCost - bestCost);
+            document.getElementById('metric-saved-badge').textContent = saved > 0 ? `초기 대비 -${saved}분 단축` : `최단 노선 확정`;
+
+            document.getElementById('alns-iter-badge').textContent = '최적화 완료';
+            setSimStatus('최적 노선 운행 중', false);
+
+            updateBanner(
+                '운행 중 · 실시간 교통 혼잡 대응 준비 완료',
+                `최적 버스 노선(총 <b>${bestCost}분</b>)이 생성되었습니다! 우측의 <span class="text-[#2F6F6A] font-bold">[교통 혼잡 발생 & ALNS 최단경로 재탐색]</span> 버튼을 눌러 실시간 경로 수정을 확인해 보세요.`
+            );
+
+            enableAlnsButton(true);
+            enableAutoSimButton(true);
+            isAnimating = false;
+            startBusLoop();
+        }
+
+        // 실시간 교통 혼잡 발생 & ALNS 재탐색 실행
+        async function triggerTrafficAndReoptimize() {
+            if (isAnimating || currentStopSequence.length < 2) return;
+            isAnimating = true;
+            reoptCount++;
+            document.getElementById('reopt-count-badge').textContent = `재탐색 ${reoptCount}회`;
+
+            // 기존 혼잡 구간 일부 해제 후 현재 버스 경로 상의 도로 2~3곳에 혼잡 발생
+            edges.forEach(e => {
+                if (e.status === 'congested' && Math.random() < 0.65) {
+                    e.status = 'normal';
+                    e.weight = e.baseWeight;
+                }
+            });
+
+            const activeEdges = edges.filter(e => currentRouteEdges.has(edgeKey(e.u, e.v)));
+            const targetEdges = (activeEdges.length >= 2 ? activeEdges : edges)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, Math.min(3, Math.max(2, activeEdges.length)));
+
+            const congestedDesc = [];
+            targetEdges.forEach(e => {
+                e.status = 'congested';
+                const delay = Math.floor(Math.random() * 14) + 12; // +12~25분 정체
+                e.weight = e.baseWeight + delay;
+                congestedDesc.push(`${e.u}-${e.v}구간(${e.weight}분)`);
+            });
+
+            drawMap();
+            setSimStatus('실시간 교통 혼잡 감지!', true);
+            updateBanner(
+                `실시간 교통 변동 감지 · 재탐색 #${reoptCount}`,
+                `현재 노선 상의 <b class="text-[#C8523B]">${congestedDesc.join(', ')}</b> 도로에 정체가 발생했습니다! A* 및 ALNS가 즉시 우회 경로를 탐색합니다.`
+            );
+            await sleep(420);
+
+            // 기존 도로 경로(currentFullRoadPath)를 그대로 주행했을 때의 지연 시간 계산
+            let delayedOldRouteCost = 0;
+            for (let i = 0; i < currentFullRoadPath.length - 1; i++) {
+                const u = currentFullRoadPath[i];
+                const v = currentFullRoadPath[i + 1];
+                const edgeObj = edges.find(e => (e.u === u && e.v === v) || (e.u === v && e.v === u));
+                if (edgeObj) delayedOldRouteCost += edgeObj.weight;
+            }
+
+            // 1) A* 최단거리 행렬 재계산 및 우회로 탐색 애니메이션
+            computeAllPairsAStar();
+            for (const e of targetEdges) {
+                const res = astarSearch(e.u, e.v);
+                activeAStarEdges.clear();
+                for (let k = 0; k < res.path.length - 1; k++) {
+                    activeAStarEdges.add(edgeKey(res.path[k], res.path[k + 1]));
+                }
+                drawMap();
+                await sleep(200);
+            }
+            activeAStarEdges.clear();
+
+            // 2) ALNS 정거장 방문 순서 재최적화
+            setSimStatus('ALNS 실시간 경로 수정 중...', true);
+            let currentOrder = getInitialPickupStops();
+            let bestOrder = [...currentOrder];
+            let bestCost = evaluatePickupOrder(bestOrder);
+
+            const totalIter = 18;
+            for (let iter = 1; iter <= totalIter; iter++) {
+                document.getElementById('alns-iter-badge').textContent = `ALNS 재탐색 ${iter}/${totalIter}`;
+                setProgressBar((iter / totalIter) * 100);
+
+                const { remaining, removed } = alnsDestroy(currentOrder);
+                const repaired = alnsRepair(remaining, removed);
+                const cost = evaluatePickupOrder(repaired);
+
+                candidateSequence = buildFullStopSequence(repaired);
+                drawMap();
+
+                if (cost < bestCost) {
+                    bestCost = cost;
+                    bestOrder = [...repaired];
+                    currentOrder = [...repaired];
+                } else if (Math.random() < 0.3) {
+                    currentOrder = [...repaired];
+                }
+                await sleep(75);
+            }
+
+            candidateSequence = null;
+            applyBestPickupOrder(bestOrder);
+
+            const beforeCost = Math.max(delayedOldRouteCost, bestCost + 5);
+            const savedMin = beforeCost - bestCost;
+
+            document.getElementById('metric-old-title').textContent = '기존 노선 유지 시';
+            document.getElementById('metric-old-cost').textContent = `${beforeCost}`;
+            document.getElementById('metric-old-sub').textContent = '혼잡 구간 통과 지연 반영';
+            document.getElementById('metric-new-cost').textContent = `${bestCost}`;
+            document.getElementById('metric-saved-badge').textContent = `⚡ 우회로 -${savedMin}분 단축!`;
+
+            document.getElementById('alns-iter-badge').textContent = '재탐색 완료';
+            setSimStatus('수정된 최단 경로 운행 중', false);
+            updateBanner(
+                `ALNS 실시간 경로 수정 완료 (재탐색 #${reoptCount})`,
+                `정체 구간(${congestedDesc.join(', ')})을 우회하여 방문 순서를 <b class="text-[#2F6F6A]">[${currentStopSequence.join(' → ')}]</b>로 수정했습니다. (기존 대비 <b>${savedMin}분 단축</b>)`
+            );
+
+            isAnimating = false;
+        }
+
+        function applyBestPickupOrder(bestOrder) {
+            currentStopSequence = buildFullStopSequence(bestOrder);
+            currentFullRoadPath = [];
+            currentRouteEdges.clear();
+
+            for (let i = 0; i < currentStopSequence.length - 1; i++) {
+                const u = currentStopSequence[i];
+                const v = currentStopSequence[i + 1];
+                const subPath = pathMatrix[u][v] || [u, v];
+
+                for (let j = 0; j < subPath.length - 1; j++) {
+                    currentRouteEdges.add(edgeKey(subPath[j], subPath[j + 1]));
+                }
+                if (i === 0) currentFullRoadPath.push(...subPath);
+                else currentFullRoadPath.push(...subPath.slice(1));
+            }
+
+            busAnimProgress = 0;
+            renderRouteTimeline();
+            drawMap();
+        }
+
+        function renderRouteTimeline() {
+            const box = document.getElementById('route-sequence-box');
+
+            box.innerHTML = currentStopSequence.map((stopId, idx) => {
+                const nextStop = currentStopSequence[idx + 1];
+                let roleTags = [];
+                if (idx === 0 && stopId === 0) roleTags.push('차고지 출발');
+                if (stopId === userOrigin) roleTags.push('내 승차');
+                aiPassengers.forEach(p => {
+                    if (p.from === stopId) roleTags.push(`승객${p.id} 승차`);
+                });
+                if (idx === currentStopSequence.length - 1 && stopId === sharedDestination) {
+                    roleTags.push('전원 하차(종점)');
+                }
+
+                let legTime = null;
+                let viaText = '';
+                if (nextStop !== undefined) {
+                    legTime = costMatrix[stopId][nextStop];
+                    const sub = pathMatrix[stopId][nextStop] || [];
+                    if (sub.length > 2) {
+                        viaText = `경유: ${sub.slice(1, -1).join('→')}`;
+                    }
+                }
+
+                const isDest = (idx === currentStopSequence.length - 1 && stopId === sharedDestination);
+
+                return `
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <div class="px-3 py-1.5 rounded-xl border ${isDest ? 'bg-[#C8523B] text-white border-[#A33B27]' : 'bg-[#FDFBF7] text-[#1F2928] border-[#2F6F6A]/40'} flex flex-col items-center min-w-[82px] shadow-sm">
+                            <span class="text-xs font-extrabold ${isDest ? 'text-white' : 'text-[#2F6F6A]'}">정거장 ${stopId}</span>
+                            <span class="text-[10px] ${isDest ? 'text-[#FFE8E3]' : 'text-[#5C5852]'} font-semibold">${roleTags.join(' · ') || '경유'}</span>
+                        </div>
+                        ${nextStop !== undefined ? `
+                            <div class="flex flex-col items-center px-1 text-[10px] mono text-[#5C5852]">
+                                <span class="text-[#2F6F6A] font-bold">${legTime}분</span>
+                                <i class="fa-solid fa-arrow-right text-[#2F6F6A]"></i>
+                                ${viaText ? `<span class="text-[9px] text-[#B55D14] font-semibold">${viaText}</span>` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /***********************************************************************
+         * 7. 보조 UI 및 초기화 제어 함수
+         ***********************************************************************/
+        function enableAlnsButton(enabled) {
+            const btn = document.getElementById('btn-trigger-alns');
+            btn.disabled = !enabled;
+            if (enabled) {
+                btn.className = 'w-full py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition border bg-[#2F6F6A] hover:bg-[#255854] text-white border-[#1F4F4B] shadow-md cursor-pointer pulse-btn';
+            } else {
+                btn.className = 'w-full py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition border bg-[#E8E4DB] text-[#9E988E] border-[#DED8CC] cursor-not-allowed';
+            }
+        }
+
+        function enableAutoSimButton(enabled) {
+            const btn = document.getElementById('btn-auto-sim');
+            btn.disabled = !enabled;
+            if (enabled) {
+                btn.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#EFECE6] hover:bg-[#E2DDD3] text-[#2F6F6A] border border-[#C7C0B3] transition cursor-pointer';
+            } else {
+                btn.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#E2DDD3] text-[#8C867B] transition cursor-not-allowed';
+            }
+        }
+
+        function toggleAutoSim() {
+            const btn = document.getElementById('btn-auto-sim');
+            if (autoSimTimer) {
+                clearInterval(autoSimTimer);
+                autoSimTimer = null;
+                btn.textContent = 'OFF';
+                btn.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#EFECE6] text-[#2F6F6A] border border-[#C7C0B3] transition cursor-pointer';
+            } else {
+                btn.textContent = 'ON (자동 재탐색)';
+                btn.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#2F6F6A] text-white border border-[#1F4F4B] transition cursor-pointer';
+                triggerTrafficAndReoptimize();
+                autoSimTimer = setInterval(() => {
+                    if (!isAnimating) triggerTrafficAndReoptimize();
+                }, 6000);
+            }
+        }
+
+        function updateBanner(stepTitle, descHtml) {
+            document.getElementById('banner-step-tag').textContent = stepTitle;
+            document.getElementById('banner-text').innerHTML = descHtml;
+        }
+
+        function setSimStatus(text, isBusy = false) {
+            document.getElementById('sim-status-label').textContent = text;
+            const dot = document.getElementById('sim-status-dot');
+            dot.className = isBusy
+                ? 'w-2 h-2 rounded-full bg-[#D97724] animate-ping'
+                : 'w-2 h-2 rounded-full bg-[#2F6F6A]';
+        }
+
+        function setProgressBar(percent) {
+            document.getElementById('algo-progress-bar').style.width = `${Math.min(100, Math.max(0, percent))}%`;
+        }
+
+        function resetRouteStateOnly() {
+            currentStopSequence = [];
+            currentFullRoadPath = [];
+            currentRouteEdges.clear();
+            activeAStarEdges.clear();
+            activeAStarNodes.clear();
+            candidateSequence = null;
+            reoptCount = 0;
+
+            edges.forEach(e => {
+                e.status = 'normal';
+                e.weight = e.baseWeight;
+            });
+
+            enableAlnsButton(false);
+            enableAutoSimButton(false);
+            document.getElementById('btn-auto-sim').textContent = 'OFF';
+            document.getElementById('reopt-count-badge').textContent = '재탐색 0회';
+            document.getElementById('alns-iter-badge').textContent = '준비 완료';
+            setProgressBar(0);
+        }
+
+        function regenerateGraph() {
+            if (isAnimating) return;
+            resetAll();
+            initGraph();
+        }
+
+        function resetAll() {
+            if (autoSimTimer) {
+                clearInterval(autoSimTimer);
+                autoSimTimer = null;
+            }
+            isAnimating = false;
+            userOrigin = null;
+            sharedDestination = null;
+            aiPassengers = [];
+            document.getElementById('btn-reroll-ai').classList.add('hidden');
+
+            resetRouteStateOnly();
+
+            document.getElementById('metric-old-title').textContent = '최적화 전 (단순 방문)';
+            document.getElementById('metric-old-cost').textContent = '--';
+            document.getElementById('metric-old-sub').textContent = '정거장 선택 대기';
+            document.getElementById('metric-new-cost').textContent = '--';
+            document.getElementById('metric-saved-badge').textContent = '대기 중';
+
+            document.getElementById('route-sequence-box').innerHTML = `
+                <p class="text-xs text-[#7A756C] mx-auto py-2">
+                    지도에서 <b>출발 정거장</b>과 <b>도착 정거장</b>을 순서대로 클릭하면 AI 동승객 배정 및 최단 경로 탐색이 즉시 시작됩니다.
+                </p>
+            `;
+
+            updateBanner(
+                'STEP 1 · 출발 정거장 선택',
+                '지도에서 탑승하실 <span class="text-[#D97724] font-bold underline underline-offset-4">내 출발 정거장</span>을 클릭해 주세요. (0번은 버스 차고지입니다)'
+            );
+            setSimStatus('대기 중', false);
+
+            renderPassengerList();
+            drawMap();
+        }
+
+        document.getElementById('speed-slider').addEventListener('input', (e) => {
+            document.getElementById('speed-label').textContent = `${e.target.value}x`;
+        });
+
+        window.onload = () => {
+            initGraph();
+            startBusLoop();
+        };
+    </script>
+</body>
+</html>
