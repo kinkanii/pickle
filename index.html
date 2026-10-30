@@ -6,7 +6,7 @@ html,body{width:100%!important;height:100%!important;margin:0;overflow:hidden!im
 button{font:inherit;cursor:pointer}
 .brandbar,.progress,.footnote{display:none!important}
 
-/* 3:4 비율 컨테이너 및 프레임 (630 x 840) */
+/* 3:4 비율 컨테이너 및 프레임 (630 x 840, 화면에 꽉 차도록 스케일링) */
 .stage{width:100%;height:100dvh;margin:0;padding:0;display:flex;align-items:center;justify-content:center}
 .present{position:fixed!important;inset:0!important;display:flex!important;align-items:center!important;justify-content:center!important;width:100vw!important;height:100dvh!important;overflow:hidden!important;margin:0!important}
 #phoneDevice.phone{
@@ -20,17 +20,18 @@ button{font:inherit;cursor:pointer}
   max-width:630px!important;
   max-height:840px!important;
   aspect-ratio:3/4!important;
-  border:10px solid #25302b!important;
-  border-radius:42px!important;
+  border:8px solid #25302b!important;
+  border-radius:36px!important;
   background:var(--paper);
   box-shadow:0 28px 95px #1b282333,0 3px 0 #778076 inset;
   transform:scale(var(--phone-scale,1))!important;
   transform-origin:center center!important;
   overflow:hidden!important;
 }
-.phone:before{content:'';position:absolute;z-index:20;width:130px;height:22px;background:#25302b;left:50%;top:0;transform:translateX(-50%);border-radius:0 0 15px 15px;display:block}
-.statusbar{height:38px;padding:11px 28px 0;display:flex;justify-content:space-between;font:12px 'DM Mono';color:#5f665e;background:var(--paper)}
+.phone:before{content:'';position:absolute;z-index:20;width:120px;height:20px;background:#25302b;left:50%;top:0;transform:translateX(-50%);border-radius:0 0 14px 14px;display:block}
+.statusbar{height:38px;padding:10px 26px 0;display:flex;justify-content:space-between;align-items:center;font:12px 'DM Mono';color:#5f665e;background:var(--paper)}
 .statusbar b{font-weight:600}
+.fsBtn{border:1px solid #d5cebe;background:#fffdf8;color:#39786f;border-radius:6px;padding:2px 8px;font:10px 'DM Mono';font-weight:700;cursor:pointer}
 .phone#phoneDevice>.screen{box-sizing:border-box!important;width:100%!important;height:calc(100% - 38px)!important;position:relative;overflow:hidden!important}
 
 /* 페이지 공통 레이아웃 */
@@ -40,7 +41,7 @@ button{font:inherit;cursor:pointer}
   inset:0!important;
   width:100%!important;
   height:100%!important;
-  padding:22px 34px 24px!important;
+  padding:20px 32px 22px!important;
   overflow-x:hidden!important;
   overflow-y:auto!important;
   overscroll-behavior:contain!important;
@@ -65,21 +66,21 @@ button{font:inherit;cursor:pointer}
 }
 
 /* 상단 네비게이션 및 아바타 */
-.pnav,.finalNav{display:flex;justify-content:space-between;align-items:center;min-height:60px!important;margin:0 0 14px;flex:none!important}
+.pnav,.finalNav{display:flex;justify-content:space-between;align-items:center;min-height:58px!important;margin:0 0 12px;flex:none!important}
 .miniBrand{display:flex!important;align-items:center!important;gap:10px!important;font-size:20px!important;line-height:1.2!important;font-weight:800!important;color:#202a27!important}
-.pageBus{width:66px!important;height:52px!important;object-fit:contain!important;flex:none!important;filter:drop-shadow(0 3px 3px #31402726)}
-.avatar{width:46px!important;height:46px!important;border-radius:50%;background:#f5d4c7;color:#915542;display:grid;place-items:center;font-size:16px!important;font-weight:800;flex:none!important}
+.pageBus{width:64px!important;height:50px!important;object-fit:contain!important;flex:none!important;filter:drop-shadow(0 3px 3px #31402726)}
+.avatar{width:44px!important;height:44px!important;border-radius:50%;background:#f5d4c7;color:#915542;display:grid;place-items:center;font-size:15px!important;font-weight:800;flex:none!important}
 .live{font:11px 'DM Mono'!important;color:#fff;background:var(--teal);padding:8px 13px!important;border-radius:20px;font-weight:600}
 .replay{border:1px solid var(--line);background:#fffdf8;border-radius:12px;padding:10px 15px;font-size:14px;font-weight:700;color:var(--ink)}
 
 /* 타이포그래피 */
 .eyebrow{font:13px 'DM Mono'!important;letter-spacing:1.1px!important;text-transform:uppercase;color:var(--teal);font-weight:500}
 h1,h2,h3,p{margin-top:0}
-h1{font:600 58px/.96 Fraunces!important;letter-spacing:-1.2px;margin:8px 0 10px!important}
+h1{font:600 56px/.96 Fraunces!important;letter-spacing:-1.2px;margin:8px 0 10px!important}
 h1 em{color:var(--coral);font-style:normal}
-h2{font:600 38px/1.02 Fraunces!important;letter-spacing:-.6px;margin:6px 0 8px!important}
+h2{font:600 36px/1.02 Fraunces!important;letter-spacing:-.6px;margin:6px 0 8px!important}
 h2 em{color:var(--coral);font-style:normal}
-.bodycopy{color:var(--muted);font-size:16px!important;line-height:1.48!important;margin:0}
+.bodycopy{color:var(--muted);font-size:15.5px!important;line-height:1.45!important;margin:0}
 
 /* PAGE 0: 로그인 히어로 이미지 및 버튼 */
 .brandHero{width:100%;max-height:310px;aspect-ratio:16/10;flex:1 1 auto;margin:14px 0 14px;border-radius:22px;background:#f6efe3 url('pickle-paper-pattern.svg') center/100% 100% no-repeat;overflow:hidden;position:relative;display:grid;place-items:center;border:2px solid #e6dfd1}
@@ -109,37 +110,37 @@ h2 em{color:var(--coral);font-style:normal}
 .rideSlider::-webkit-slider-thumb{-webkit-appearance:none!important;width:26px!important;height:26px!important;margin-top:2px!important;border-radius:50%!important;background:#fffdf8!important;border:2px solid #39786f!important;box-shadow:0 2px 5px #24312b30!important}
 .rideSlider.is-on::-webkit-slider-thumb{border-color:#f0c7b6!important}
 #rideModeNote{margin-top:14px;font-size:14px!important;color:var(--muted)}
-.bigbtn{border:0;background:var(--ink);color:white;border-radius:16px;padding:17px 22px;width:100%;font-size:16px!important;min-height:56px!important;font-weight:700;margin-top:auto}
+.bigbtn{border:0;background:var(--ink);color:white;border-radius:16px;padding:16px 22px;width:100%;font-size:16px!important;min-height:54px!important;font-weight:700;margin-top:auto}
 .bigbtn:disabled{opacity:.45;cursor:default}
 .secure{font-size:13px!important;color:#93948b;text-align:center;margin:10px 0 0}
 
 /* PAGE 2 & PAGE 6: 지도가 잘리지 않고 전체 표시되도록 와이드 박스 구성 */
-.bigMap{height:0;min-height:330px;flex:1 1 0;position:relative;margin:10px 0;border:2px solid #d8cbb4;border-radius:22px;overflow:hidden;background:#f6efe3;box-shadow:0 5px 0 #e5dccb,0 12px 26px #303b2812;display:flex;align-items:center;justify-content:center}
+.bigMap{height:0;min-height:320px;flex:1 1 0;position:relative;margin:8px 0;border:2px solid #d8cbb4;border-radius:22px;overflow:hidden;background:#f6efe3;box-shadow:0 5px 0 #e5dccb,0 12px 26px #303b2812;display:flex;align-items:center;justify-content:center}
 .bigMap svg{width:100%;height:100%;display:block}
-.mapTopline{position:absolute;z-index:3;top:12px;left:14px;right:14px;display:flex;justify-content:space-between;pointer-events:none}
-.mapTopline span,.mapTopline b{background:#fffdf0ee;border:1px solid #e7dec9;border-radius:10px;padding:7px 12px;font:11px 'DM Mono';color:#50624e}
+.mapTopline{position:absolute;z-index:3;top:10px;left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none}
+.mapTopline span,.mapTopline b{background:#fffdf0ee;border:1px solid #e7dec9;border-radius:10px;padding:6px 11px;font:11px 'DM Mono';color:#50624e}
 .mapTopline b{color:#ae5545;font-weight:700}
 .mapTopline b i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#e77960;margin-right:5px;animation:blink .8s infinite}
-.mapLegend{position:absolute;z-index:3;bottom:10px;right:12px;display:flex;gap:12px;background:#fffdf0ee;border:1px solid #e4dbc8;border-radius:10px;padding:7px 12px;font:10px 'DM Mono';color:#59645a}
+.mapLegend{position:absolute;z-index:3;bottom:10px;right:12px;display:flex;gap:12px;background:#fffdf0ee;border:1px solid #e4dbc8;border-radius:10px;padding:6px 11px;font:10px 'DM Mono';color:#59645a}
 .mapLegend span{display:flex;align-items:center;gap:6px}
 .mapLegend i{width:10px;height:10px;border-radius:50%;display:inline-block}
 .legendJam{background:#c66e58}
 .legendPickle{background:#3f8d68}
-.routeCompare{display:block!important;flex:none!important;padding:12px 14px!important;margin:6px 0 10px!important;border:1px solid #d5e1d3!important;border-radius:15px;background:#eaf1e8!important;color:var(--ink)}
+.routeCompare{display:block!important;flex:none!important;padding:11px 14px!important;margin:4px 0 8px!important;border:1px solid #d5e1d3!important;border-radius:15px;background:#eaf1e8!important;color:var(--ink)}
 .routeCompareHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .routeCompareHead>b{font-size:14px;color:#29463b}
 .routeCompareHead>span{font:10px "DM Mono";letter-spacing:.3px;color:#668073;white-space:nowrap}
-.routeCompareOptions{display:grid;grid-template-columns:1fr 24px 1fr;align-items:center;gap:8px;margin-top:8px}
-.routeCompareOptions>div{display:flex;justify-content:space-between;align-items:center;gap:6px;border-radius:10px;background:#fffdf5;padding:9px 12px}
+.routeCompareOptions{display:grid;grid-template-columns:1fr 24px 1fr;align-items:center;gap:8px;margin-top:7px}
+.routeCompareOptions>div{display:flex;justify-content:space-between;align-items:center;gap:6px;border-radius:10px;background:#fffdf5;padding:8px 12px}
 .routeCompareOptions>div small{font:10px "DM Mono";color:#7b7c72}
 .routeCompareOptions>div b{font:700 14px "DM Sans";white-space:nowrap;color:#625d54}
 .routeCompareOptions>i{text-align:center;color:var(--teal);font-style:normal;font-size:16px}
 .routeCompareOptions .routeCompareBest{background:#39786f}
 .routeCompareOptions .routeCompareBest small,.routeCompareOptions .routeCompareBest b{color:white}
-.routeCompareNote{font-size:12px;color:#667568;margin-top:6px}
+.routeCompareNote{font-size:12px;color:#667568;margin-top:5px}
 
 /* PAGE 3: 배차 히어로 */
-.page#p3 .dispatchHero{flex:1;min-height:320px;margin:10px 0 12px;border:2px solid #d8cbb4;border-radius:26px;background:linear-gradient(155deg,#edf1e4,#f8f0df 72%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;position:relative;overflow:hidden;box-shadow:0 8px 0 #e6ddce,0 16px 30px #303b2814}
+.page#p3 .dispatchHero{flex:1;min-height:310px;margin:10px 0 12px;border:2px solid #d8cbb4;border-radius:26px;background:linear-gradient(155deg,#edf1e4,#f8f0df 72%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;position:relative;overflow:hidden;box-shadow:0 8px 0 #e6ddce,0 16px 30px #303b2814}
 .page#p3 .dispatchHero:before{content:"";position:absolute;width:360px;height:360px;border:2px dashed #82ac8e;border-radius:50%;animation:spin 18s linear infinite}
 .page#p3 .dispatchHero strong,.page#p3 .dispatchHero span{z-index:1}
 .page#p3 .dispatchHero strong{font:600 28px Fraunces}
@@ -148,41 +149,34 @@ h2 em{color:var(--coral);font-style:normal}
 .page#p3 .dispatchPath{width:86%;display:flex;align-items:center;gap:10px;z-index:2;color:#52635b;font:12px "DM Mono"}
 .page#p3 .dispatchPath i{height:4px;flex:1;background:repeating-linear-gradient(90deg,#39786f 0 8px,transparent 8px 14px);position:relative}
 .page#p3 .dispatchPath i:after{content:"";position:absolute;right:0;top:-5px;border:6px solid transparent;border-left-color:#39786f}
-.page#p3 .dispatchArt{width:92%;height:270px;position:relative;z-index:1;transform:translateX(-40px) scale(.9);transition:transform 1s cubic-bezier(.2,.8,.2,1);animation:dispatchBob 2s ease-in-out infinite alternate}
+.page#p3 .dispatchArt{width:92%;height:260px;position:relative;z-index:1;transform:translateX(-40px) scale(.9);transition:transform 1s cubic-bezier(.2,.8,.2,1);animation:dispatchBob 2s ease-in-out infinite alternate}
 @keyframes dispatchBob{to{translate:0 -8px}}
 .page#p3 .dispatchHero.arrived .dispatchArt{transform:translateX(0) scale(1.02)}
 .page#p3 .dispatchArt>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 10px 12px #26372a26)}
 
-/* PAGE 4: 동시 매칭 맵 및 요금 카드 */
-.profileMap{flex:1 1 320px!important;min-height:310px!important;margin:8px 0!important;padding:12px!important;background:#f8f4e9;border:2px solid #d9cfbb;border-radius:22px;box-shadow:0 6px 0 #e9e0cf;display:flex;flex-direction:column;overflow:hidden}
-.matchMapHead{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 8px;font:12px "DM Mono";color:#26352e;flex:none}
-.matchMapHead span{background:#e8f0e8;color:#39786f;border-radius:20px;padding:6px 10px;font-size:10px;font-weight:600}
-.profileMap svg{flex:1 1 auto!important;width:100%!important;height:0!important;min-height:0!important;overflow:visible}
-.algolabel{font:11px 'DM Mono';color:var(--teal);text-align:center;background:#e9f1e9;padding:8px 10px;border-radius:10px;letter-spacing:.4px;margin-top:6px}
-.matchPerson.rider{opacity:0}
-.routeStop{opacity:0;transition:opacity .3s}
+/* PAGE 4: 동시 매칭 맵 및 요금 카드 (도로-경로 일치 와이드 뷰) */
+.profileMap{flex:1 1 300px!important;min-height:290px!important;margin:6px 0!important;padding:10px 12px!important;background:#f8f4e9;border:2px solid #d9cfbb;border-radius:22px;box-shadow:0 6px 0 #e9e0cf;display:flex;flex-direction:column;overflow:hidden}
+.matchMapHead{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 6px;font:12px "DM Mono";color:#26352e;flex:none}
+.matchMapHead span{background:#e8f0e8;color:#39786f;border-radius:20px;padding:5px 10px;font-size:10px;font-weight:600}
+.profileMap svg{flex:1 1 auto!important;width:100%!important;height:0!important;min-height:0!important;display:block}
+.algolabel{font:11px 'DM Mono';color:var(--teal);text-align:center;background:#e9f1e9;padding:7px 10px;border-radius:10px;letter-spacing:.4px;margin-top:4px;flex:none}
 .routeStop circle:first-of-type{fill:#fffdf6;stroke:#e77960;stroke-width:4}
 .routeStop circle:last-of-type{fill:#39786f}
-.routeStop path{stroke:#e77960;stroke-width:2;stroke-dasharray:3 3}
-.routeStop.live{opacity:1}
-.matchPerson{opacity:1;transform-box:fill-box;transform-origin:center;transition:opacity .35s,transform .8s cubic-bezier(.2,.8,.2,1)}
-.profileMap .matchPerson.rider.live{opacity:1;animation:profileJoin .45s ease-out both}
-.profileMap .matchPerson.rider rect{filter:drop-shadow(0 3px 3px #24312b2a)}
-@keyframes profileJoin{from{opacity:0;transform:translateY(6px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
-.fareSplit{flex:none;margin:4px 0;padding:12px 14px;background:#fffdf6;border:1px solid #d9cfbb;border-radius:15px;box-shadow:0 3px 0 #e9e0cf;color:#26352e}
+.routeStop path{stroke:#e77960;stroke-width:2.5;stroke-dasharray:3 3}
+.fareSplit{flex:none;margin:4px 0;padding:11px 14px;background:#fffdf6;border:1px solid #d9cfbb;border-radius:15px;box-shadow:0 3px 0 #e9e0cf;color:#26352e}
 .fareSplitHead{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:10px}
 .fareSplitHead>span{font:10px "DM Mono";letter-spacing:.4px;color:#39786f}
-.fareSplitHead>b{grid-column:1;font:700 14px "DM Sans";margin-top:3px}
-.fareSplitHead>strong{grid-column:2;grid-row:1/3;white-space:nowrap;font:800 26px "DM Sans";color:#39786f}
+.fareSplitHead>b{grid-column:1;font:700 14px "DM Sans";margin-top:2px}
+.fareSplitHead>strong{grid-column:2;grid-row:1/3;white-space:nowrap;font:800 25px "DM Sans";color:#39786f}
 .fareSplitHead>strong small{font:600 12px "DM Sans";color:#67736a}
-.fareSplitSeats{display:flex;align-items:center;gap:8px;margin-top:9px}
+.fareSplitSeats{display:flex;align-items:center;gap:8px;margin-top:8px}
 .fareSeat{display:grid;place-items:center;flex:none;width:28px;height:28px;border:1px solid #cfcbbd;border-radius:50%;background:#f6f3eb;color:#85877d;font:700 10px "DM Sans";opacity:.45;transition:all .35s}
 .fareSeat.active{opacity:1;background:#39786f;color:white;border-color:#39786f;transform:scale(1.06)}
 .fareSplitSeats>i{flex:1;height:3px;background:#ddd9ce;transition:background .35s}
 .fareSplitSeats>i.active{background:#39786f}
 .fareSplitSeats>b{flex:none;font:700 11px "DM Sans";color:#4c6254}
-.fareTime{margin-top:8px;padding-top:7px;border-top:1px solid #eee8da;font:700 11px "DM Sans";color:#cf6d57}
-#matchingStatus{text-align:center;font-size:13px!important;font-weight:700;color:var(--teal);margin-top:6px}
+.fareTime{margin-top:7px;padding-top:6px;border-top:1px solid #eee8da;font:700 11px "DM Sans";color:#cf6d57}
+#matchingStatus{text-align:center;font-size:13px!important;font-weight:700;color:var(--teal);margin-top:5px}
 
 /* 팝업 공통 */
 .matchPop{position:absolute;inset:18px 20px;z-index:12;border-radius:30px;background:#f8f1e4f8;backdrop-filter:blur(6px);box-shadow:0 16px 60px #17221c55;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 32px;opacity:0;visibility:hidden;transform:scale(.84);transition:opacity .4s,transform .58s cubic-bezier(.16,1.25,.35,1),visibility .4s}
@@ -208,35 +202,30 @@ h2 em{color:var(--coral);font-style:normal}
 .etaBadgeLarge strong{font:800 36px/1 'DM Sans';letter-spacing:-1px}
 .etaBadgeLarge span{font:700 11px 'DM Mono';margin-top:3px}
 
-/* PAGE 5: 픽업 맵 및 요약 카드 */
-.page#p5 .pickupmap{box-sizing:border-box!important;flex:1 1 280px!important;width:100%!important;min-height:260px!important;margin:10px 0 0!important;border-radius:22px;border:2px solid #d8cbb4;position:relative;overflow:hidden!important}
-.map{height:100%;position:absolute;inset:0;background:#e9eadf}
-.map svg{filter:saturate(.86);width:100%;height:100%;display:block}
-.maplabel{position:absolute;border-radius:10px;background:#fffdf2f0;padding:8px 12px!important;font-size:12px!important;font-weight:700;box-shadow:0 2px 8px #26312818;z-index:4}
-.pickupmap .maplabel.home{right:14px;bottom:86px}
-.pickupmap .maplabel.pick{left:14px;bottom:44px}
-.pickupLegend{position:absolute;left:12px;right:12px;top:12px;z-index:4;display:flex;justify-content:space-between;gap:8px;padding:9px 12px;border:1px solid #e3dccb;border-radius:11px;background:#fffdf0ed;font:11px "DM Mono";color:#50624e}
+/* PAGE 5: On its way 픽업 맵 (절대 잘리지 않는 560x280 와이드 통합 SVG) */
+.page#p5 .pickupmap{box-sizing:border-box!important;flex:1 1 260px!important;width:100%!important;min-height:245px!important;margin:8px 0 0!important;border-radius:22px;border:2px solid #d8cbb4;background:#e8eadf;position:relative;overflow:hidden!important;display:flex;align-items:center;justify-content:center}
+.page#p5 .pickupmap svg{width:100%;height:100%;display:block}
+.pickupLegend{position:absolute;left:12px;right:12px;top:10px;z-index:4;display:flex;justify-content:space-between;gap:8px;padding:7px 12px;border:1px solid #e3dccb;border-radius:10px;background:#fffdf0ee;font:10.5px "DM Mono";color:#50624e;pointer-events:none}
 .pickupLegend span{display:flex;align-items:center;gap:6px}
-.pickupLegend i{display:inline-block;width:18px;border-top:3px dashed #39786f}
+.pickupLegend i{display:inline-block;width:18px;border-top:3.5px dashed #39786f}
 .pickupLegend .walkKey{border-color:#e77960}
-.pickupActorOverlay{position:absolute;inset:0;z-index:6;width:100%;height:100%;overflow:visible;pointer-events:none}
 .sarahWalkBob{transform-box:fill-box;transform-origin:center bottom;animation:sarahStep .38s ease-in-out infinite alternate}
 @keyframes sarahStep{from{transform:translateY(0) rotate(-2deg)}to{transform:translateY(-2px) rotate(2deg)}}
-.pickupcopy{font-size:14px!important;color:var(--muted);line-height:1.45!important;margin:10px 2px}
-.rideSummary{flex:none;margin:4px 0 8px;padding:12px 14px;border:1px solid #ddd5c4;border-radius:16px;background:#f7f3e9;box-shadow:0 3px 0 #ece4d6}
-.rideSummaryHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.rideSummaryHead h3{margin:0;font:700 16px "DM Sans";color:#25342f}
+.pickupcopy{font-size:13.5px!important;color:var(--muted);line-height:1.4!important;margin:8px 2px}
+.rideSummary{flex:none;margin:2px 0 8px;padding:11px 14px;border:1px solid #ddd5c4;border-radius:16px;background:#f7f3e9;box-shadow:0 3px 0 #ece4d6}
+.rideSummaryHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rideSummaryHead h3{margin:0;font:700 15px "DM Sans";color:#25342f}
 .rideSummaryHead span{font:10px "DM Mono";letter-spacing:.5px;color:#738177}
-.summarySaving{display:grid;grid-template-columns:1fr auto;align-items:center;padding:10px 12px;background:#e5f0df;border-radius:11px;color:#355b48}
+.summarySaving{display:grid;grid-template-columns:1fr auto;align-items:center;padding:9px 12px;background:#e5f0df;border-radius:11px;color:#355b48}
 .summarySaving>span{font:10px "DM Mono";letter-spacing:.3px}
-.summarySaving>b{grid-column:2;grid-row:1/3;font:800 24px "DM Sans";line-height:1}
-.summarySaving>small{font:12px "DM Sans";color:#627264;margin-top:3px}
-.summaryDetails{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
-.summaryDetails>div{display:flex;flex-direction:column;gap:4px;padding:8px 10px;border:1px solid #e5dece;border-radius:10px;background:#fffdf6}
+.summarySaving>b{grid-column:2;grid-row:1/3;font:800 22px "DM Sans";line-height:1}
+.summarySaving>small{font:11.5px "DM Sans";color:#627264;margin-top:2px}
+.summaryDetails{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:7px}
+.summaryDetails>div{display:flex;flex-direction:column;gap:3px;padding:7px 10px;border:1px solid #e5dece;border-radius:10px;background:#fffdf6}
 .summaryDetails span{font:9px "DM Mono";letter-spacing:.3px;color:#788177}
 .summaryDetails b{font:700 13px "DM Sans";color:#25342f}
 .summaryDetails .womenBenefit{color:#39786f}
-.rideSummary .fareNote{margin:6px 0 0;font-size:10px;line-height:1.3;color:#8c887d}
+.rideSummary .fareNote{margin:5px 0 0;font-size:10px;line-height:1.25;color:#8c887d}
 
 /* PAGE 7: 최종 완료 화면 */
 .finalPage{align-items:center;text-align:center;padding:20px 34px 24px!important;background:radial-gradient(ellipse at 50% 42%,#fffaf0,#faf5e9 72%)}
@@ -282,7 +271,7 @@ h2 em{color:var(--coral);font-style:normal}
 <!-- 로컬 voice.mp3 오디오 (매칭 팝업 시 단 1회 자동 재생) -->
 <audio id="pickleVoiceAudio" preload="auto" src="voice.mp3"></audio>
 
-<section class="present"><div class="phone" id="phoneDevice"><div class="statusbar"><b>4:14</b><b>●●●  ▰</b></div><div class="screen">
+<section class="present"><div class="phone" id="phoneDevice"><div class="statusbar"><b>4:14</b><div><button class="fsBtn" onclick="toggleFullScreen(event)">⛶ FULLSCREEN</button> <b>●●● ▰</b></div></div><div class="screen">
 
 <!-- 1차 팝업: 매칭 완료 팝업 -->
 <div id="matchPop" class="matchPop">
@@ -292,7 +281,7 @@ h2 em{color:var(--coral);font-style:normal}
   <h2 id="matchPopTitle">YOUR PICKLE<br><em>CREW IS HERE!</em></h2>
   <p id="matchPopCopy">2 verified riders are joining Sarah on the same route.</p>
   <div class="crewPills" id="crewPills"><span>SA</span><span>R1</span><span>R2</span><b>+2 Verified Riders matched</b></div>
-  <div class="matchAlert"><span class="alertCheck">✓</span><span><b id="matchAlertTitle">Same route, same shuttle</b><small id="matchAlertCopy">Verified UAEU riders · women-only PICKLE vehicle</small></span></div>
+  <div class="matchAlert"><span class="alertCheck">✓</span><span><b id="matchAlertTitle">Same route, same shuttle</b><small id="matchAlertCopy">Verified UAEU riders · shared PICKLE vehicle</small></span></div>
   <button class="continueBtn" onclick="dismissMatch()">Meet your PICKLE crew <span>→</span></button>
 </div>
 
@@ -307,7 +296,7 @@ h2 em{color:var(--coral);font-style:normal}
   <button class="continueBtn" onclick="dismissWalkOutPop()">Start walking to Gate 3 <span>→</span></button>
 </div>
 
-<!-- PAGE 0: 로그인 (첫 화면 즉시 표시) -->
+<!-- PAGE 0: 로그인 (클릭 시 전체화면 진입 + 다음 페이지 이동) -->
 <section class="page active" id="p0">
   <div class="pnav"><div class="miniBrand"><img class="pageBus" src="pickle-vehicle-cutout.png" alt="PICKLE shuttle">Welcome to PICKLE</div><div class="avatar">SA</div></div>
   <div class="eyebrow">UAEU · STUDENT MOBILITY</div>
@@ -316,11 +305,11 @@ h2 em{color:var(--coral);font-style:normal}
   <div class="brandHero"><img class="brandBase" src="pickle-bus-clean.png" alt="PICKLE shuttle"><img class="forkFlight" id="heroForkFlight" src="pickle-fork-sprite.png" alt=""><span>CAMPUS · AL AIN</span></div>
   <div class="eyebrow">ONE TAP. YOU'RE VERIFIED.</div>
   <p class="bodycopy" style="margin-top:6px">Sign in with your UAEU student account. Your student status stays private.</p>
-  <button class="auth" onclick="nextPage()">Continue with UAEU login <span>Secure student verification · SSO</span></button>
+  <button class="auth" onclick="enterFullScreenAndNext()">Continue with UAEU login <span>Secure student verification · SSO</span></button>
   <div class="trust"><b>✓ Verified students</b><b>✓ Women-only option</b></div>
 </section>
 
-<!-- PAGE 1: 출발/도착 설정 (자동 체크 제거 · 내가 직접 조작해야만 작동) -->
+<!-- PAGE 1: 출발/도착 설정 (DROP-OFF를 House로 변경 완료) -->
 <section class="page" id="p1">
   <div class="pnav"><button class="replay" onclick="prevPage()">←</button><div class="miniBrand"><img class="pageBus" src="pickle-vehicle-cutout.png" alt="">Plan your ride</div><div class="avatar">SA</div></div>
   <div class="eyebrow">MONDAY · AFTER YOUR LAST CLASS</div>
@@ -329,7 +318,7 @@ h2 em{color:var(--coral);font-style:normal}
   <div class="fieldLabel">PICK-UP</div>
   <div class="field"><strong>UAEU · College Complex, Gate 3</strong><i class="pin">⌖</i></div>
   <div class="fieldLabel">DROP-OFF</div>
-  <div class="field"><strong>Maqam 1 · Student housing</strong><i class="pin">⌖</i></div>
+  <div class="field"><strong>House</strong><i class="pin">⌖</i></div>
   <div class="arrival">
     <div><small>BE THERE BY</small><strong>4:40 <span style="font-size:13px">PM</span></strong></div>
     <div class="rideSliderControl"><div class="rideSliderLabels"><span>WOMEN ONLY</span></div><input id="womenChoice" class="rideSlider" type="range" min="0" max="100" step="1" value="0" aria-label="Slide to choose women-only ride" oninput="selectRideMode(this.value)" onchange="snapRideMode(this.value)"></div>
@@ -339,39 +328,51 @@ h2 em{color:var(--coral);font-style:normal}
   <p class="secure">Shared rides · Verified UAEU students only</p>
 </section>
 
-<!-- PAGE 2: 초기 A* 경로 탐색 (와이드 비율 지도로 전체 한눈에 표시) -->
+<!-- PAGE 2: 초기 A* 경로 탐색 (도로와 경로 선 완벽 일치) -->
 <section class="page" id="p2">
   <div class="pnav"><button class="replay" onclick="prevPage()">←</button><div class="miniBrand"><img class="pageBus" src="pickle-vehicle-cutout.png" alt="PICKLE bus">AI route planner</div><div class="live">A* ROUTE</div></div>
   <div class="eyebrow">STEP 1 / 3 · AI FASTEST ROUTE</div>
-  <h2>Fastest way to <em>Maqam 1.</em></h2>
+  <h2>Fastest way to <em>House.</em></h2>
   <div class="bigMap">
-    <div class="mapTopline"><span>UAEU → MAQAM 1</span><b id="routeEta">AI ETA · -- MIN</b></div>
-    <svg id="liveMapSvg" viewBox="0 0 560 340" preserveAspectRatio="xMidYMid meet">
+    <div class="mapTopline"><span>UAEU → HOUSE</span><b id="routeEta">AI ETA · -- MIN</b></div>
+    <svg id="liveMapSvg" viewBox="0 0 560 320" preserveAspectRatio="xMidYMid meet">
       <defs>
         <pattern id="paperDots" width="36" height="36" patternUnits="userSpaceOnUse"><circle cx="5" cy="6" r="1.2" fill="#d5cbb8" opacity=".4"/><path d="M26 8l1.5 3 3 1-3 1.5-1.5 3-1-3-3-1.5 3-1z" fill="#d7cbaa" opacity=".45"/></pattern>
         <filter id="busShadow"><feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#253326" flood-opacity=".28"/></filter>
       </defs>
-      <rect width="560" height="340" fill="#f6efe3"/><rect width="560" height="340" fill="url(#paperDots)"/>
-      <path d="M-10 95Q140 70 280 95T570 90M-10 245Q150 220 310 250T570 235M140 -10Q160 170 135 350M410 -10Q390 170 420 350" fill="none" stroke="#e5ead9" stroke-width="26" stroke-linecap="round"/>
-      <path d="M-10 95Q140 70 280 95T570 90M-10 245Q150 220 310 250T570 235M140 -10Q160 170 135 350M410 -10Q390 170 420 350" fill="none" stroke="#fffdf7" stroke-width="14" stroke-linecap="round"/>
-      <path d="M60 280 L115 245 L175 130 L325 110 L495 65" fill="none" stroke="#c8beb0" stroke-width="18" stroke-linecap="round"/>
-      <path d="M175 130 L325 110 L495 65" fill="none" stroke="#c66e58" stroke-width="6" stroke-linecap="round" stroke-dasharray="9 8"/>
-      <g fill="#b54e43" font-size="12"><circle cx="215" cy="125" r="5"/><circle cx="265" cy="118" r="5"/><circle cx="315" cy="111" r="5"/></g>
-      <path d="M60 280 L115 245 L175 210 L240 190 L315 170 L390 140 L450 105 L495 65" fill="none" stroke="#fffdf8" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
-      <path id="expressRoute" d="M60 280 L115 245 L175 210 L240 190 L315 170 L390 140 L450 105 L495 65" fill="none" stroke="#3f8d68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="11 8"/>
+      <rect width="560" height="320" fill="#f6efe3"/><rect width="560" height="320" fill="url(#paperDots)"/>
+      <!-- 실제 그래프 간선과 100% 일치하는 배경 도로망 -->
+      <g stroke="#e0dacb" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M60 265 L115 235 L175 200 L240 180 L315 160 L390 130 L450 98 L495 60"/>
+        <path d="M115 235 L180 115 L325 95 L495 60"/>
+        <path d="M60 265 L105 145 L235 85 L390 130"/>
+        <path d="M315 160 L395 235 L450 98"/>
+      </g>
+      <g stroke="#fffdf7" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M60 265 L115 235 L175 200 L240 180 L315 160 L390 130 L450 98 L495 60"/>
+        <path d="M115 235 L180 115 L325 95 L495 60"/>
+        <path d="M60 265 L105 145 L235 85 L390 130"/>
+        <path d="M315 160 L395 235 L450 98"/>
+      </g>
+      <!-- 상단 정체 구간 표시 (도로 위에 정확히 겹침) -->
+      <path d="M115 235 L180 115 L325 95 L495 60" fill="none" stroke="#c66e58" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="9 8"/>
+      <g fill="#b54e43"><circle cx="180" cy="115" r="5.5"/><circle cx="252" cy="105" r="5.5"/><circle cx="325" cy="95" r="5.5"/></g>
+      <!-- A* 최적 경로 라인 (도로 한가운데를 정확히 따라감) -->
+      <path id="expressRoute" d="M60 265 L115 235 L175 200 L240 180 L315 160 L390 130 L450 98 L495 60" fill="none" stroke="#3f8d68" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="11 8"/>
+      <!-- 정거장 핀 & 라벨 -->
       <g id="routePins">
-        <circle cx="60" cy="280" r="12" fill="#e77960" stroke="#fffdf8" stroke-width="4"/>
-        <circle cx="175" cy="210" r="9" fill="#3f8d68" stroke="#fffdf8" stroke-width="3.5"/>
-        <circle cx="315" cy="170" r="9" fill="#3f8d68" stroke="#fffdf8" stroke-width="3.5"/>
-        <circle cx="495" cy="65" r="13" fill="#fffdf8" stroke="#3f8d68" stroke-width="5"/>
+        <circle cx="60" cy="265" r="12" fill="#e77960" stroke="#fffdf8" stroke-width="4"/>
+        <circle cx="175" cy="200" r="9" fill="#3f8d68" stroke="#fffdf8" stroke-width="3.5"/>
+        <circle cx="315" cy="160" r="9" fill="#3f8d68" stroke="#fffdf8" stroke-width="3.5"/>
+        <circle cx="495" cy="60" r="13" fill="#fffdf8" stroke="#3f8d68" stroke-width="5"/>
       </g>
       <g fill="#26352e" font-family="DM Mono" font-size="11" font-weight="700">
-        <text x="24" y="308">UAEU GATE 3</text>
-        <text x="195" y="102" fill="#a8493a">CONGESTED ROAD</text>
-        <text x="285" y="202" fill="#2f6f6a">A* FAST CORRIDOR</text>
-        <text x="415" y="55">MAQAM 1</text>
+        <text x="24" y="296">UAEU GATE 3</text>
+        <text x="195" y="82" fill="#a8493a">CONGESTED ROAD</text>
+        <text x="275" y="192" fill="#2f6f6a">A* FAST CORRIDOR</text>
+        <text x="435" y="48">HOUSE</text>
       </g>
-      <g id="fastBus" transform="translate(60 280)" filter="url(#busShadow)"><image href="pickle-vehicle-cutout.png" x="-45" y="-36" width="90" height="72" preserveAspectRatio="xMidYMid meet"/></g>
+      <g id="fastBus" transform="translate(60 265)" filter="url(#busShadow)"><image href="pickle-vehicle-cutout.png" x="-44" y="-35" width="88" height="70" preserveAspectRatio="xMidYMid meet"/></g>
     </svg>
     <div class="mapLegend"><span><i class="legendJam"></i>Congested roads</span><span><i class="legendPickle"></i>PICKLE · fastest route</span></div>
   </div>
@@ -394,36 +395,75 @@ h2 em{color:var(--coral);font-style:normal}
     <div class="dispatchArt"><img src="pickle-bus-clean.png" alt="PICKLE shuttle"><img class="forkFlight" id="dispatchForkFlight" src="pickle-fork-sprite.png" alt=""></div>
     <div class="dispatchPath"><span>UAEU</span><i></i><b>GATE 3</b></div>
     <strong id="dispatchStatus">Positioning at UAEU Gate 3…</strong>
-    <span>Route lock · <b id="dispatchRoute">UAEU → Maqam 1</b></span>
+    <span>Route lock · <b id="dispatchRoute">UAEU → House</b></span>
   </div>
   <button class="bigbtn" onclick="go(4)">Find riders on this route <span style="float:right">↗</span></button>
 </section>
 
-<!-- PAGE 4: 동승자 일괄 매칭 -->
+<!-- PAGE 4: 동승자 일괄 매칭 (560x300 와이드 뷰, 도로와 경로 선 100% 일치) -->
 <section class="page" id="p4">
   <div class="pnav"><button class="replay" onclick="prevPage()">←</button><div class="miniBrand"><img class="pageBus" src="pickle-vehicle-cutout.png" alt="PICKLE bus">Ride crew</div><div class="avatar">SA</div></div>
   <div class="eyebrow">STEP 3 / 3 · MATCH SAME-DIRECTION RIDERS</div>
   <h2 id="matchingTitle">One shuttle. <em>Three rides shared.</em></h2>
   <p class="bodycopy" id="matchingCopy">AI matches verified classmates along Sarah’s fastest route all at once.</p>
   <div class="clusterViz profileMap">
-    <div class="matchMapHead"><strong>UAEU → MAQAM 1</strong><span id="matchMapStatus">3 RIDERS · SIMULTANEOUS MATCH</span></div>
-    <svg viewBox="0 0 390 390" preserveAspectRatio="xMidYMid meet">
-      <defs><pattern id="matchPaper" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="4" cy="5" r="1" fill="#d3cab9" opacity=".5"/></pattern><filter id="profileShadow"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#253326" flood-opacity=".2"/></filter></defs>
-      <rect width="390" height="390" rx="18" fill="#f4efdf"/><rect width="390" height="390" rx="18" fill="url(#matchPaper)"/>
-      <g aria-hidden="true">
-        <g fill="#e7eadf" opacity=".88"><path d="M0 0h78l14 47-57 31H0zM112 0h103l-15 54-70 26-27-31zM306 0h84v82l-42 23-38-33zM0 119l57-26 34 35-18 53H0zM133 101l55-23 42 34-29 52-59-10zM302 119l50-24 38 24v69l-58 8-35-34zM0 258l63-26 44 30-21 66H0zM142 247l52-26 49 33-18 61-67 14-42-36z"/></g>
-        <g fill="none" stroke="#d4d9cc" stroke-width="25" stroke-linecap="round"><path d="M-18 99C55 119 113 86 169 99S291 133 408 86"/><path d="M83-18C104 52 74 110 103 169S117 298 73 408"/><path d="M278-18C250 48 272 83 315 123S342 227 320 408"/><path d="M-20 249C64 222 124 234 195 265S321 296 410 242"/></g>
-        <g fill="none" stroke="#fffdf7" stroke-width="20" stroke-linecap="round"><path d="M-18 99C55 119 113 86 169 99S291 133 408 86"/><path d="M83-18C104 52 74 110 103 169S117 298 73 408"/><path d="M278-18C250 48 272 83 315 123S342 227 320 408"/><path d="M-20 249C64 222 124 234 195 265S321 296 410 242"/></g>
+    <div class="matchMapHead"><strong>UAEU → HOUSE</strong><span id="matchMapStatus">3 RIDERS · SIMULTANEOUS MATCH</span></div>
+    <svg viewBox="0 0 560 300" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <pattern id="matchPaper" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="4" cy="5" r="1" fill="#d3cab9" opacity=".5"/></pattern>
+        <filter id="profileShadow"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#253326" flood-opacity=".2"/></filter>
+      </defs>
+      <rect width="560" height="300" rx="16" fill="#f4efdf"/><rect width="560" height="300" rx="16" fill="url(#matchPaper)"/>
+      <!-- 보조 배경 도로망 -->
+      <g fill="none" stroke="#e2e6d8" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M-10 85 L180 105 L360 75 L570 95"/>
+        <path d="M165 -10 L195 195 L150 310"/>
+        <path d="M380 -10 L355 150 L410 310"/>
       </g>
-      <path id="matchRoadBase" d="M34 330C74 302 76 265 124 246S196 226 220 177S281 131 352 66" fill="none" stroke="#d8e4d4" stroke-width="36" stroke-linecap="round"/>
-      <path id="matchRoadSurface" d="M34 330C74 302 76 265 124 246S196 226 220 177S281 131 352 66" fill="none" stroke="#fffdf7" stroke-width="23" stroke-linecap="round"/>
-      <path id="clusterLine" d="M34 330C74 302 76 265 124 246S196 226 220 177S281 131 352 66" fill="none" stroke="#39786f" stroke-width="8" stroke-linecap="round" stroke-dasharray="8 8"/>
-      <g class="matchPerson sarahCard" transform="translate(34 330)" filter="url(#profileShadow)"><g transform="scale(1.18)"><rect x="-47" y="-30" width="96" height="61" rx="17" fill="#fffdf6" stroke="#e77960" stroke-width="2"/><circle cx="-23" cy="0" r="17" fill="#f0c5b4"/><path d="M-37 2q2-18 14-18t14 18v8h-28z" fill="#684a43"/><circle cx="-29" cy="-3" r="1.5" fill="#332d2a"/><circle cx="-18" cy="-3" r="1.5" fill="#332d2a"/><path d="M-27 4q4 4 8 0" fill="none" stroke="#a5564c" stroke-width="1.5"/><text x="1" y="-2" font-size="9.5" font-weight="800" fill="#24312b">sarah_uaeu</text><text x="1" y="12" font-size="7.5" fill="#777a72">YOU · GATE 3</text></g></g>
-      <g id="mariamCard" class="matchPerson rider live" transform="translate(124 246)" filter="url(#profileShadow)"><g transform="scale(1.18)"><rect x="-60" y="-34" width="120" height="68" rx="18" fill="#fffdf6" stroke="#39786f" stroke-width="2"/><circle cx="-31" cy="0" r="19" fill="#e5bca5"/><path d="M-49 0q0-20 18-20t18 20v11h-36z" fill="#3f3736"/><circle cx="-37" cy="-3" r="1.7" fill="#332d2a"/><circle cx="-25" cy="-3" r="1.7" fill="#332d2a"/><path d="M-35 5q4 4 8 0" fill="none" stroke="#a5564c" stroke-width="1.5"/><text x="-4" y="-2" font-size="10" font-weight="800" fill="#24312b">Rider 1</text><text x="-4" y="12" font-size="8" fill="#777a72">+2 MIN · MATCHED</text></g></g>
-      <g id="noorCard" class="matchPerson rider live" transform="translate(220 177)" filter="url(#profileShadow)"><g transform="scale(1.18)"><rect x="-59" y="-34" width="118" height="68" rx="18" fill="#fffdf6" stroke="#39786f" stroke-width="2"/><circle cx="-30" cy="0" r="19" fill="#d8ae8e"/><path d="M-48 0q0-20 18-20t18 20v11h-36z" fill="#302d2c"/><circle cx="-36" cy="-3" r="1.7" fill="#332d2a"/><circle cx="-24" cy="-3" r="1.7" fill="#332d2a"/><path d="M-34 5q4 4 8 0" fill="none" stroke="#a5564c" stroke-width="1.5"/><text x="-3" y="-2" font-size="10" font-weight="800" fill="#24312b">Rider 2</text><text x="-3" y="12" font-size="8" fill="#777a72">+4 MIN · MATCHED</text></g></g>
-      <g id="mariamRouteStop" class="routeStop live"><path id="mariamJoiner" d=""/><circle r="13"/><circle r="5"/></g>
-      <g id="noorRouteStop" class="routeStop live"><path id="noorJoiner" d=""/><circle r="13"/><circle r="5"/></g>
-      <g id="matchTerminal" transform="translate(352 66)"><circle r="20" fill="#fffdf5" stroke="#39786f" stroke-width="4"/><path d="M-9-2h18l-2 11h-14zM-7-6l-4-7m8 7l-3-9m8 9l1-9m4 9l4-7" stroke="#39786f" stroke-width="2.5" stroke-linecap="round"/><text x="-15" y="30" font-size="9" font-weight="700" fill="#39786f">MAQAM 1</text></g>
+      <g fill="none" stroke="#faf7ef" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M-10 85 L180 105 L360 75 L570 95"/>
+        <path d="M165 -10 L195 195 L150 310"/>
+        <path d="M380 -10 L355 150 L410 310"/>
+      </g>
+      <!-- 메인 매칭 도로 (clusterLine과 정확히 일치) -->
+      <path id="matchRoadBase" d="M65 250 L130 222 L195 195 L275 172 L355 150 L430 112 L500 62" fill="none" stroke="#d8e4d4" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="matchRoadSurface" d="M65 250 L130 222 L195 195 L275 172 L355 150 L430 112 L500 62" fill="none" stroke="#fffdf7" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="clusterLine" d="M65 250 L130 222 L195 195 L275 172 L355 150 L430 112 L500 62" fill="none" stroke="#39786f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="9 8"/>
+      <!-- 정거장 포인트 (도로 위에 정확히 위치) -->
+      <g class="routeStop" transform="translate(65 250)"><circle r="12"/><circle r="5"/></g>
+      <g id="mariamRouteStop" class="routeStop" transform="translate(195 195)"><path d="M0 -12 L0 -24"/><circle r="12"/><circle r="5"/></g>
+      <g id="noorRouteStop" class="routeStop" transform="translate(355 150)"><path d="M0 -12 L0 -24"/><circle r="12"/><circle r="5"/></g>
+      <!-- 도착지 House 마커 -->
+      <g id="matchTerminal" transform="translate(500 62)">
+        <circle r="19" fill="#fffdf5" stroke="#39786f" stroke-width="4"/>
+        <path d="M-8 1 L0 -7 L8 1 V8 H-8 Z" fill="none" stroke="#39786f" stroke-width="2.5" stroke-linejoin="round"/>
+        <text x="-18" y="31" font-size="10" font-family="DM Mono" font-weight="700" fill="#39786f">HOUSE</text>
+      </g>
+      <!-- Sarah 및 익명 동승자 프로필 카드 -->
+      <g class="matchPerson sarahCard" transform="translate(75 192)" filter="url(#profileShadow)">
+        <rect x="-54" y="-28" width="112" height="56" rx="15" fill="#fffdf6" stroke="#e77960" stroke-width="2.5"/>
+        <circle cx="-30" cy="0" r="16" fill="#f0c5b4"/>
+        <path d="M-43 2q2-16 13-16t13 16v7h-26z" fill="#684a43"/>
+        <circle cx="-35" cy="-2" r="1.5" fill="#332d2a"/><circle cx="-25" cy="-2" r="1.5" fill="#332d2a"/>
+        <text x="-6" y="-2" font-size="10.5" font-weight="800" fill="#24312b">sarah_uaeu</text>
+        <text x="-6" y="12" font-size="8.5" fill="#777a72">YOU · GATE 3</text>
+      </g>
+      <g id="mariamCard" class="matchPerson" transform="translate(195 136)" filter="url(#profileShadow)">
+        <rect x="-58" y="-28" width="118" height="56" rx="15" fill="#fffdf6" stroke="#39786f" stroke-width="2.5"/>
+        <circle cx="-32" cy="0" r="16" fill="#e5bca5"/>
+        <path d="M-46 0q0-17 14-17t14 17v9h-28z" fill="#3f3736"/>
+        <circle cx="-37" cy="-2" r="1.5" fill="#332d2a"/><circle cx="-27" cy="-2" r="1.5" fill="#332d2a"/>
+        <text x="-8" y="-2" font-size="10.5" font-weight="800" fill="#24312b">Rider 1</text>
+        <text x="-8" y="12" font-size="8.5" fill="#777a72">VERIFIED · +2m</text>
+      </g>
+      <g id="noorCard" class="matchPerson" transform="translate(355 91)" filter="url(#profileShadow)">
+        <rect x="-58" y="-28" width="118" height="56" rx="15" fill="#fffdf6" stroke="#39786f" stroke-width="2.5"/>
+        <circle cx="-32" cy="0" r="16" fill="#d8ae8e"/>
+        <path d="M-46 0q0-17 14-17t14 17v9h-28z" fill="#302d2c"/>
+        <circle cx="-37" cy="-2" r="1.5" fill="#332d2a"/><circle cx="-27" cy="-2" r="1.5" fill="#332d2a"/>
+        <text x="-8" y="-2" font-size="10.5" font-weight="800" fill="#24312b">Rider 2</text>
+        <text x="-8" y="12" font-size="8.5" fill="#777a72">VERIFIED · +4m</text>
+      </g>
     </svg>
     <div class="algolabel" id="algorithm">ONE PICKLE SHUTTLE · ALL SAME-DIRECTION RIDERS MATCHED AT ONCE</div>
   </div>
@@ -436,28 +476,68 @@ h2 em{color:var(--coral);font-style:normal}
   <button class="bigbtn" style="margin-top:8px" onclick="announceMatch()">Confirm shared shuttle <span style="float:right">↗</span></button>
 </section>
 
-<!-- PAGE 5: 탑승 -->
+<!-- PAGE 5: On its way 픽업 화면 (지도 잘림 완전 해결 + 도로 위에 경로 선 100% 일치) -->
 <section class="page" id="p5">
   <div class="pnav"><button class="replay" onclick="prevPage()">←</button><div class="miniBrand"><img class="pageBus" src="pickle-vehicle-cutout.png" alt="">Your pickup</div><div class="live" id="pickupStatusBadge">SHUTTLE ASSIGNED</div></div>
   <div class="eyebrow">SHARED PICKUP · GATE 3</div>
   <h2>Your PICKLE is <em>on its way, Sarah.</em></h2>
   <p class="bodycopy">2 matched classmates are aboard. Sarah walks 3 minutes to the same pickup stop.</p>
   <div class="pickupmap">
-    <div class="map">
-      <svg viewBox="0 0 390 320" preserveAspectRatio="xMidYMid slice">
-        <rect width="390" height="320" fill="#e8eadf"/>
-        <path d="M0 60 Q100 90 170 45T400 65M-20 170Q90 130 195 180T410 145M-10 265Q90 230 180 270T405 250M80-30Q40 90 90 170T70 350M260-30Q300 85 255 170T280 350" fill="none" stroke="#fffdf6" stroke-width="17"/>
-        <path id="vehicleApproachPath" d="M20 70C78 68 111 104 149 139S224 194 282 218" fill="none" stroke="#39786f" stroke-width="6" stroke-linecap="round" stroke-dasharray="9 8"/>
-        <path id="sarahWalkPath" d="M63 276C108 255 145 266 176 249S270 238 322 247" fill="none" stroke="#e77960" stroke-width="5" stroke-linecap="round" stroke-dasharray="3 8"/>
-        <circle cx="306" cy="231" r="20" fill="#39786f" opacity=".14"/><circle cx="306" cy="231" r="11" fill="#39786f" stroke="white" stroke-width="4"/>
-      </svg>
-      <span class="maplabel home">PICKLE stop · Gate 3</span>
-      <span class="maplabel pick">Sarah · UAEU campus</span>
-      <div class="pickupLegend"><span><i class="busKey"></i>Shuttle approaching</span><span><i class="walkKey"></i>Sarah walking</span></div>
-    </div>
-    <svg class="pickupActorOverlay" viewBox="0 0 390 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <g id="approachingShuttle" transform="translate(20 70)"><image id="pickupForkFlight" class="pickupForkFlight" href="pickle-fork-sprite.png" x="-74" y="-100" width="162" height="133" preserveAspectRatio="none"/><image href="pickle-bus-clean.png" x="-74" y="-100" width="162" height="133" preserveAspectRatio="none"/></g>
-      <g id="walkingSarah" transform="translate(63 276)"><g class="sarahWalkBob"><image href="sarah-walk-base.png" x="-22" y="-72" width="44" height="76" preserveAspectRatio="xMidYMid meet"/><svg x="-15" y="-71" width="30" height="40" viewBox="25 10 55 80" preserveAspectRatio="xMidYMid meet"><image href="sarah-walk-face.png" x="0" y="0" width="103" height="228" preserveAspectRatio="none"/></svg></g></g>
+    <div class="pickupLegend"><span><i class="busKey"></i>Shuttle approaching</span><span><i class="walkKey"></i>Sarah walking (3 min)</span></div>
+    <!-- 단일 와이드 SVG (560x280, meet)로 지도 잘림 방지 및 도로-경로 완벽 정렬 -->
+    <svg viewBox="0 0 560 280" preserveAspectRatio="xMidYMid meet" aria-label="Map showing PICKLE shuttle and Sarah meeting at Gate 3">
+      <rect width="560" height="280" fill="#e8eadf"/>
+      <!-- 주변 캠퍼스 블록 장식 -->
+      <g fill="#dce3d3" opacity=".8">
+        <rect x="24" y="135" width="95" height="55" rx="10"/>
+        <rect x="230" y="48" width="120" height="52" rx="10"/>
+        <rect x="440" y="65" width="90" height="70" rx="10"/>
+      </g>
+      <!-- 배경 도로 테두리 (이동 경로와 100% 동일한 좌표 포함) -->
+      <g fill="none" stroke="#d5d9cc" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+        <!-- 셔틀 진입 도로 -->
+        <path d="M 65 75 C 165 75, 225 145, 385 175"/>
+        <!-- 사라 보행자 도로 -->
+        <path d="M 95 235 C 205 235, 285 205, 385 175"/>
+        <!-- Gate 3 이후 출구 도로 -->
+        <path d="M 385 175 L 535 175"/>
+        <path d="M 385 40 L 385 265"/>
+      </g>
+      <!-- 배경 도로 표면 (흰색) -->
+      <g fill="none" stroke="#fffdf6" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 65 75 C 165 75, 225 145, 385 175"/>
+        <path d="M 95 235 C 205 235, 285 205, 385 175"/>
+        <path d="M 385 175 L 535 175"/>
+        <path d="M 385 40 L 385 265"/>
+      </g>
+      <!-- 실제 이동 경로 점선 (흰색 도로 한가운데와 정확히 일치) -->
+      <path id="vehicleApproachPath" d="M 65 75 C 165 75, 225 145, 385 175" fill="none" stroke="#39786f" stroke-width="6" stroke-linecap="round" stroke-dasharray="10 8"/>
+      <path id="sarahWalkPath" d="M 95 235 C 205 235, 285 205, 385 175" fill="none" stroke="#e77960" stroke-width="5" stroke-linecap="round" stroke-dasharray="4 8"/>
+      <!-- 출발점 및 합류 정류장(Gate 3) 마커 -->
+      <circle cx="65" cy="75" r="7" fill="#39786f"/>
+      <circle cx="95" cy="235" r="7" fill="#e77960"/>
+      <circle cx="385" cy="175" r="22" fill="#39786f" opacity=".16"/>
+      <circle cx="385" cy="175" r="12" fill="#39786f" stroke="#fffdf8" stroke-width="4"/>
+      <!-- 지도 내부 라벨 (잘리지 않는 안전 위치에 고정) -->
+      <g font-family="DM Sans" font-size="11" font-weight="800">
+        <rect x="28" y="244" width="136" height="24" rx="7" fill="#fffdf2" stroke="#e2dac8"/>
+        <text x="40" y="260" fill="#202a27">Sarah · UAEU campus</text>
+        <rect x="398" y="192" width="142" height="26" rx="8" fill="#fffdf2" stroke="#39786f" stroke-width="1.5"/>
+        <text x="410" y="209" fill="#39786f">PICKLE stop · Gate 3</text>
+      </g>
+      <!-- 이동하는 셔틀 & 사라 액터 -->
+      <g id="approachingShuttle" transform="translate(65 75)">
+        <image id="pickupForkFlight" class="pickupForkFlight" href="pickle-fork-sprite.png" x="-52" y="-70" width="114" height="93" preserveAspectRatio="none"/>
+        <image href="pickle-bus-clean.png" x="-52" y="-70" width="114" height="93" preserveAspectRatio="none"/>
+      </g>
+      <g id="walkingSarah" transform="translate(95 235)">
+        <g class="sarahWalkBob">
+          <image href="sarah-walk-base.png" x="-18" y="-58" width="36" height="62" preserveAspectRatio="xMidYMid meet"/>
+          <svg x="-12" y="-57" width="24" height="33" viewBox="25 10 55 80" preserveAspectRatio="xMidYMid meet">
+            <image href="sarah-walk-face.png" x="0" y="0" width="103" height="228" preserveAspectRatio="none"/>
+          </svg>
+        </g>
+      </g>
     </svg>
   </div>
   <p class="pickupcopy" id="pickupWalkCopy">Waiting for 3-minute departure alert…</p>
@@ -470,57 +550,68 @@ h2 em{color:var(--coral);font-style:normal}
   <button class="bigbtn" id="pickupCta" onclick="startOnBoardAlns()" disabled>Waiting for PICKLE… <span style="float:right">↗</span></button>
 </section>
 
-<!-- PAGE 6: On Board 이후 A* + ALNS 실시간 경로 수정 (지도 전체가 한눈에 들어오는 560x340 와이드 뷰) -->
+<!-- PAGE 6: On Board 이후 A* + ALNS 실시간 경로 수정 (560x320 와이드 뷰, 도로-경로 100% 일치) -->
 <section class="page" id="p6">
   <div class="pnav"><button class="replay" onclick="prevPage()">←</button><div class="miniBrand"><img class="pageBus" src="pickle-vehicle-cutout.png" alt="PICKLE bus">ALNS live reroute</div><div class="live" id="alnsBadge" style="background:#e77960">LIVE TRAFFIC</div></div>
   <div class="eyebrow">ON BOARD · DYNAMIC A* + ALNS OPTIMIZATION</div>
   <h2 id="alnsTitle">Traffic ahead. <em>ALNS rerouting…</em></h2>
   <p class="bodycopy" id="alnsCopy">Congestion detected on the initial corridor. A* updates stop costs and ALNS repairs the route in real time.</p>
   <div class="bigMap">
-    <div class="mapTopline"><span>ON BOARD · FULL NETWORK VIEW</span><b id="alnsEtaBadge"><i></i>RECALCULATING…</b></div>
-    <svg id="alnsMapSvg" viewBox="0 0 560 340" preserveAspectRatio="xMidYMid meet">
-      <rect width="560" height="340" fill="#f6efe3"/><rect width="560" height="340" fill="url(#paperDots)"/>
-      <path d="M-10 95Q140 70 280 95T570 90M-10 245Q150 220 310 250T570 235M140 -10Q160 170 135 350M410 -10Q390 170 420 350" fill="none" stroke="#e8ecde" stroke-width="22" stroke-linecap="round"/>
-      <g stroke="#d5cebe" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none">
-        <path d="M60 280 L115 245 L175 210 L240 190 L315 170 L390 140 L450 105 L495 65"/>
-        <path d="M60 280 L105 155 L235 95 L390 140"/>
-        <path d="M175 210 L235 95 L240 190"/>
-        <path d="M315 170 L395 245 L450 105"/>
-        <path d="M390 140 L395 245"/>
+    <div class="mapTopline"><span>UAEU GATE 3 → HOUSE</span><b id="alnsEtaBadge"><i></i>RECALCULATING…</b></div>
+    <svg id="alnsMapSvg" viewBox="0 0 560 320" preserveAspectRatio="xMidYMid meet">
+      <rect width="560" height="320" fill="#f6efe3"/><rect width="560" height="320" fill="url(#paperDots)"/>
+      <!-- 모든 우회 경로 및 기본 경로와 100% 일치하는 배경 도로망 -->
+      <g stroke="#ded7c7" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M60 265 L115 235 L175 200 L240 180 L315 160 L390 130 L450 98 L495 60"/>
+        <path d="M60 265 L105 145 L235 85 L390 130"/>
+        <path d="M175 200 L235 85 L240 180"/>
+        <path d="M315 160 L395 235 L450 98"/>
+        <path d="M390 130 L395 235"/>
       </g>
+      <g stroke="#fffdf7" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M60 265 L115 235 L175 200 L240 180 L315 160 L390 130 L450 98 L495 60"/>
+        <path d="M60 265 L105 145 L235 85 L390 130"/>
+        <path d="M175 200 L235 85 L240 180"/>
+        <path d="M315 160 L395 235 L450 98"/>
+        <path d="M390 130 L395 235"/>
+      </g>
+      <!-- A* 탐색 스캔 광선 -->
       <g id="astarScanGroup" class="alnsScanLine">
-        <line x1="175" y1="210" x2="235" y2="95"/>
-        <line x1="235" y1="95" x2="390" y2="140"/>
-        <line x1="390" y1="140" x2="395" y2="245"/>
-        <line x1="395" y1="245" x2="450" y2="105"/>
-        <line x1="60" y1="280" x2="105" y2="155"/>
-        <line x1="105" y1="155" x2="235" y2="95"/>
+        <line x1="175" y1="200" x2="235" y2="85"/>
+        <line x1="235" y1="85" x2="390" y2="130"/>
+        <line x1="390" y1="130" x2="395" y2="235"/>
+        <line x1="395" y1="235" x2="450" y2="98"/>
+        <line x1="60" y1="265" x2="105" y2="145"/>
+        <line x1="105" y1="145" x2="235" y2="85"/>
       </g>
-      <path id="oldJammedRoute" d="M240 190 L315 170 L390 140 L450 105" fill="none" stroke="#c8523b" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="10 9" class="jamPulse" opacity="0"/>
-      <path id="alnsActiveRoute" d="M60 280 L115 245 L175 210 L240 190 L315 170 L390 140 L450 105 L495 65" fill="none" stroke="#2F6F6A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- 정체 발생 구간 (도로 위에 정확히 겹침) -->
+      <path id="oldJammedRoute" d="M240 180 L315 160 L390 130 L450 98" fill="none" stroke="#c8523b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="10 9" class="jamPulse" opacity="0"/>
+      <!-- ALNS 수정 완료 우회 최단 경로 (#2F6F6A) -->
+      <path id="alnsActiveRoute" d="M60 265 L115 235 L175 200 L240 180 L315 160 L390 130 L450 98 L495 60" fill="none" stroke="#2F6F6A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- 정거장 노드 -->
       <g id="alnsNodes">
-        <circle cx="60" cy="280" r="12" fill="#e77960" stroke="#fffdf8" stroke-width="3.5"/>
-        <circle cx="115" cy="245" r="8" fill="#fffdf8" stroke="#2F6F6A" stroke-width="3"/>
-        <circle cx="175" cy="210" r="10" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3.5"/>
-        <circle cx="240" cy="190" r="9" fill="#fffdf8" stroke="#2F6F6A" stroke-width="3"/>
-        <circle cx="105" cy="155" r="9" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3"/>
-        <circle cx="235" cy="95" r="10" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3.5"/>
-        <circle cx="315" cy="170" r="10" fill="#c8523b" stroke="#fffdf8" stroke-width="3.5"/>
-        <circle cx="390" cy="140" r="10" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3.5"/>
-        <circle cx="395" cy="245" r="10" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3.5"/>
-        <circle cx="450" cy="105" r="9" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3"/>
-        <circle cx="495" cy="65" r="13" fill="#fffdf8" stroke="#2F6F6A" stroke-width="4.5"/>
+        <circle cx="60" cy="265" r="12" fill="#e77960" stroke="#fffdf8" stroke-width="3.5"/>
+        <circle cx="115" cy="235" r="8" fill="#fffdf8" stroke="#2F6F6A" stroke-width="3"/>
+        <circle cx="175" cy="200" r="10" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3.5"/>
+        <circle cx="240" cy="180" r="9" fill="#fffdf8" stroke="#2F6F6A" stroke-width="3"/>
+        <circle cx="105" cy="145" r="9" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3"/>
+        <circle cx="235" cy="85" r="10" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3.5"/>
+        <circle cx="315" cy="160" r="10" fill="#c8523b" stroke="#fffdf8" stroke-width="3.5"/>
+        <circle cx="390" cy="130" r="10" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3.5"/>
+        <circle cx="395" cy="235" r="10" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3.5"/>
+        <circle cx="450" cy="98" r="9" fill="#2F6F6A" stroke="#fffdf8" stroke-width="3"/>
+        <circle cx="495" cy="60" r="13" fill="#fffdf8" stroke="#2F6F6A" stroke-width="4.5"/>
       </g>
       <g fill="#26352e" font-family="DM Mono" font-size="10.5" font-weight="700">
-        <text x="20" y="308">GATE 3 (START)</text>
-        <text x="142" y="234">STOP R1</text>
-        <text x="195" y="77" fill="#2F6F6A">BYPASS Y</text>
-        <text x="285" y="200" fill="#b54e43">JAM ZONE</text>
-        <text x="355" y="122">STOP R2</text>
-        <text x="362" y="268" fill="#2F6F6A">BYPASS Z</text>
-        <text x="415" y="55">MAQAM 1</text>
+        <text x="20" y="294">GATE 3 (START)</text>
+        <text x="142" y="224">STOP R1</text>
+        <text x="195" y="68" fill="#2F6F6A">BYPASS Y</text>
+        <text x="285" y="190" fill="#b54e43">JAM ZONE</text>
+        <text x="355" y="112">STOP R2</text>
+        <text x="362" y="258" fill="#2F6F6A">BYPASS Z</text>
+        <text x="435" y="48">HOUSE</text>
       </g>
-      <g id="alnsShuttle" transform="translate(60 280)" filter="url(#busShadow)"><image href="pickle-vehicle-cutout.png" x="-44" y="-35" width="88" height="70" preserveAspectRatio="xMidYMid meet"/></g>
+      <g id="alnsShuttle" transform="translate(60 265)" filter="url(#busShadow)"><image href="pickle-vehicle-cutout.png" x="-44" y="-35" width="88" height="70" preserveAspectRatio="xMidYMid meet"/></g>
     </svg>
     <div class="mapLegend"><span><i class="legendJam"></i>Live Traffic Jam</span><span><i class="legendPickle" style="background:#2F6F6A"></i>ALNS Repaired Route</span></div>
   </div>
@@ -531,7 +622,7 @@ h2 em{color:var(--coral);font-style:normal}
   </div>
   <div style="display:flex;gap:10px;margin-top:auto">
     <button class="replay" style="flex:1;padding:15px 12px;font-size:14px" onclick="triggerMoreTrafficAlns()">⚡ Trigger Traffic + ALNS</button>
-    <button class="bigbtn" id="alnsFinishBtn" style="flex:1.3;margin-top:0" onclick="go(7)">Arrive at Maqam 1 <span style="float:right">↗</span></button>
+    <button class="bigbtn" id="alnsFinishBtn" style="flex:1.3;margin-top:0" onclick="go(7)">Arrive at House <span style="float:right">↗</span></button>
   </div>
 </section>
 
@@ -553,18 +644,19 @@ h2 em{color:var(--coral);font-style:normal}
 
 </div></div></section></main>
 <script>
+// Page 2 & Page 6 배경 도로와 100% 일치하는 그래프 노드 좌표 (560x320)
 const ROAD={
-  G:{x:60,y:280},
-  C:{x:115,y:245},
-  N:{x:175,y:210},
-  B:{x:240,y:190},
-  M:{x:315,y:170},
-  J:{x:390,y:140},
-  K:{x:450,y:105},
-  H:{x:495,y:65},
-  X:{x:105,y:155},
-  Y:{x:235,y:95},
-  Z:{x:395,y:245}
+  G:{x:60,y:265},
+  C:{x:115,y:235},
+  N:{x:175,y:200},
+  B:{x:240,y:180},
+  M:{x:315,y:160},
+  J:{x:390,y:130},
+  K:{x:450,y:98},
+  H:{x:495,y:60},
+  X:{x:105,y:145},
+  Y:{x:235,y:85},
+  Z:{x:395,y:235}
 };
 const EDGES=[['G','C',.45],['C','N',.55],['N','B',.7],['B','M',.9],['M','J',1.05],['J','K',1.1],['K','H',1.25],['G','X',.7],['X','Y',1.0],['Y','J',.85],['N','Y',.8],['B','Y',.6],['M','Z',.95],['Z','K',.8],['Z','J',.65]];
 const REQUESTS=[{id:'Sarah',node:'G',dest:'H',eta:16.67,women:true},{id:'Rider 1',node:'N',dest:'H',eta:16.63,women:true},{id:'Rider 2',node:'M',dest:'H',eta:16.73,women:true},{id:'Rider 3',node:'B',dest:'H',eta:16.65,women:false},{id:'Rider 4',node:'X',dest:'Z',eta:17.2,women:true}];
@@ -576,31 +668,36 @@ function astar(start,goal,trafficAware=true){const g={[start]:0},km={[start]:0},
 function clusterSarah(){const base=REQUESTS.find(x=>x.id==='Sarah');const eligible=REQUESTS.filter(x=>x.dest===base.dest&&x.women===base.women&&Math.abs(x.eta-base.eta)<=.14);if(eligible.length<2)return[base];let cx=eligible.reduce((a,x)=>a+ROAD[x.node].x,0)/eligible.length,cy=eligible.reduce((a,x)=>a+ROAD[x.node].y,0)/eligible.length;matchedRiders=eligible.filter(x=>Math.hypot(ROAD[x.node].x-cx,ROAD[x.node].y-cy)<260);return matchedRiders}
 function routeFor(order,trafficAware=true){let nodes=['G',...order,'H'],full=[],km=0,minutes=0;for(let i=0;i<nodes.length-1;i++){let r=astar(nodes[i],nodes[i+1],trafficAware);if(!r.nodes.length)return{km:Infinity,minutes:Infinity,path:[]};km+=r.km;minutes+=r.minutes;full.push(...(i?r.nodes.slice(1):r.nodes))}return{km,minutes,path:full}}
 function optimizeStops(){const stops=[...new Set(matchedRiders.filter(x=>x.id!=='Sarah').map(x=>x.node))];let best={km:Infinity,minutes:Infinity,path:[]},order=[];function search(left){if(!left.length){const score=routeFor(order);if(score.minutes<best.minutes||(score.minutes===best.minutes&&score.km<best.km)){best=score;bestStops=[...order]}return}for(let i=0;i<left.length;i++){order.push(left[i]);search(left.filter((_,j)=>j!==i));order.pop()}}search(stops);best.baselineMinutes=routeFor([...bestStops].reverse(),true).minutes;bestPath=best.path;return best}
-function matchPoint(node){const p=ROAD[node];return{x:34+(p.x-60)*(318/435),y:330+(p.y-280)*(264/215)}}
-function matchPathD(nodes){return nodes.map((n,i)=>{const p=matchPoint(n);return`${i?'L':'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`}).join(' ')}
-function placeMatchedRider(cardId,stopId,joinerId,node){const p=matchPoint(node),card=$(cardId),pin=$(stopId);card.setAttribute('transform',`translate(${p.x.toFixed(1)} ${(p.y-48).toFixed(1)})`);pin.setAttribute('transform',`translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`);$(joinerId).setAttribute('d','M0 -8L0 -17')}
-
-function renderMatchRoute(){
-  const route=optimizeStops(),d=matchPathD(route.path);
-  ['matchRoadBase','matchRoadSurface','clusterLine'].forEach(id=>$(id).setAttribute('d',d));
-  const terminal=matchPoint('H');
-  $('matchTerminal').setAttribute('transform',`translate(${terminal.x.toFixed(1)} ${terminal.y.toFixed(1)})`);
-  const riders=Object.fromEntries(matchedRiders.map(r=>[r.id,r]));
-  if(riders['Rider 1'])placeMatchedRider('mariamCard','mariamRouteStop','mariamJoiner',riders['Rider 1'].node);
-  if(riders['Rider 2'])placeMatchedRider('noorCard','noorRouteStop','noorJoiner',riders['Rider 2'].node);
-  const timeAt=node=>{let t=0;for(let i=0;i<route.path.length-1;i++){const a=route.path[i],b=route.path[i+1];for(const [u,v,w]of EDGES)if((u===a&&v===b)||(u===b&&v===a)){t+=edgeCost(a,b,w)*3.4;break}if(b===node)return Math.max(1,Math.round(t))}return 0};
-  for(const [id,node]of [['mariamCard',riders['Rider 1']?.node],['noorCard',riders['Rider 2']?.node]]){
-    if(node){
-      const label=$(id).querySelector('text:last-child');
-      if(label)label.textContent=`VERIFIED · +${timeAt(node)}m`;
-    }
-  }
-  return route;
-}
 
 function pathD(nodes){return nodes.map((n,i)=>`${i?'L':'M'}${ROAD[n].x} ${ROAD[n].y}`).join(' ')}
 let rideMode='any',page=0,timers=[],vehicleProgress=0,rideStarted=false,routeFrame=0,pickupFrame=0,alnsFrame=0,alnsVariant=0,voicePlayedOnce=false;
 const $=id=>document.getElementById(id);
+
+// 1. 전체화면(Fullscreen) 요청 및 화면 꽉 채우기 스케일링
+function requestAppFullScreen(){
+  const el=document.documentElement;
+  if(!document.fullscreenElement && !document.webkitFullscreenElement){
+    if(el.requestFullscreen)el.requestFullscreen().catch(()=>{});
+    else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
+  }
+}
+function toggleFullScreen(e){
+  if(e)e.stopPropagation();
+  if(!document.fullscreenElement && !document.webkitFullscreenElement){
+    requestAppFullScreen();
+  }else{
+    if(document.exitFullscreen)document.exitFullscreen().catch(()=>{});
+    else if(document.webkitExitFullscreen)document.webkitExitFullscreen();
+  }
+}
+function enterFullScreenAndNext(){
+  requestAppFullScreen();
+  nextPage();
+}
+// 페이지 첫 클릭 시 전체화면 자동 시도
+window.addEventListener('pointerdown',function autoFsOnFirstTap(){
+  requestAppFullScreen();
+},{once:true});
 
 function fitPhone(){
   const frame=$('phoneDevice'),slot=document.querySelector('.present');
@@ -609,15 +706,16 @@ function fitPhone(){
   const widths=[rect.width,window.innerWidth,document.documentElement.clientWidth,vv?.width].filter(v=>Number.isFinite(v)&&v>0);
   const heights=[rect.height,window.innerHeight,document.documentElement.clientHeight,vv?.height].filter(v=>Number.isFinite(v)&&v>0);
   const w=Math.min(...widths),h=Math.min(...heights);
-  const scale=Math.max(.1,Math.min(1,(w-24)/630,(h-24)/840));
+  // 화면 여백을 최소화하고 꽉 차게 보이도록 스케일 제한 해제
+  const scale=Math.max(.1,Math.min((w-8)/630,(h-8)/840));
   frame.style.setProperty('--phone-scale',scale.toFixed(4));
 }
 function refitPhone(){fitPhone();requestAnimationFrame(fitPhone);setTimeout(fitPhone,180);setTimeout(fitPhone,700)}
 window.addEventListener('resize',refitPhone,{passive:true});
 window.addEventListener('orientationchange',refitPhone,{passive:true});
+window.addEventListener('fullscreenchange',refitPhone,{passive:true});
 window.addEventListener('load',refitPhone,{once:true});
 
-// 사용자가 직접 슬라이더를 움직였을 때만 작동하는 Women-only 토글 함수
 function selectRideMode(raw){
   const choice=$('womenChoice');
   if(!choice)return;
@@ -631,7 +729,6 @@ function selectRideMode(raw){
   if(summaryLabel)summaryLabel.textContent=enabled?'Women-only ✓':'Shared ride';
 }
 
-// 마우스나 손가락을 뗐을 때 0 또는 100으로 깔끔하게 스냅
 function snapRideMode(raw){
   const choice=$('womenChoice');
   if(!choice)return;
@@ -677,7 +774,6 @@ function go(n){
   document.querySelectorAll(".page").forEach((p,i)=>{p.classList.toggle("active",i===n);p.classList.remove("exit")});
   page=n;
   if(n===0){const fork=$("heroForkFlight");if(fork)fork.classList.remove("flying");delayed(()=>launchFork("heroForkFlight"),400)}
-  // n===1 일 때 자동 체크 타이머 완전히 제거됨 (사용자가 직접 조작해야만 작동)
   if(n===2)runOptimizer();
   if(n===3)runDispatch();
   if(n===4)runMatch();
@@ -696,7 +792,7 @@ function prevPage(){
   go(Math.max(0,page-1));
 }
 
-function updateFareSplit(count,baselineMinutes,fastMinutes){
+function updateFareSplit(count){
   const n=Math.max(1,Math.min(3,count)),per=Math.round(30/n);
   $("farePerRider").innerHTML=`AED ${per}<small>/ person</small>`;
   $("fareSplitCount").textContent=n===1?"Sarah riding solo":`${n} riders sharing`;
@@ -707,12 +803,7 @@ function updateFareSplit(count,baselineMinutes,fastMinutes){
 
 function runMatch(){
   matchedRiders=clusterSarah();
-  const route=renderMatchRoute();
-  updateFareSplit(3,route.baselineMinutes,route.minutes);
-  $('mariamCard').classList.add('live');
-  $('mariamRouteStop').classList.add('live');
-  $('noorCard').classList.add('live');
-  $('noorRouteStop').classList.add('live');
+  updateFareSplit(3);
   $('matchingTitle').innerHTML='One shuttle. <em>Three rides shared.</em>';
   $('matchingCopy').textContent='All same-direction riders along Sarah’s route are matched simultaneously.';
   $('matchMapStatus').textContent='3 RIDERS · SIMULTANEOUS MATCH';
@@ -730,20 +821,20 @@ function runMatch(){
 }
 
 function runOptimizer(){
-  const route=$("expressRoute"),result=astar("G","H",true),distanceFirst=astar("G","H",false);
-  bestPath=result.nodes;
-  bestStops=[];
+  const route=$("expressRoute"),bus=$("fastBus");
+  const initialCorridor=['G','C','N','B','M','J','K','H'];
+  bestPath=initialCorridor;
   route.setAttribute("d",pathD(bestPath));
+  bus.setAttribute("transform",`translate(${ROAD.G.x} ${ROAD.G.y})`);
   const length=route.getTotalLength();
   route.style.transition="none";
   route.style.strokeDasharray=String(length);
   route.style.strokeDashoffset=String(length);
-  $("routeEta").textContent="PICKLE AI · "+Math.max(1,Math.round(result.minutes))+" MIN";
-  const distanceEtaWithTraffic=distanceFirst.nodes.slice(1).reduce((sum,node,index)=>{const prev=distanceFirst.nodes[index],edge=EDGES.find(([u,v])=>(u===prev&&v===node)||(u===node&&v===prev));return sum+edgeCost(prev,node,edge[2],true)*3.4},0);
-  $("distanceEta").textContent=Math.max(1,Math.round(distanceEtaWithTraffic))+" min";
-  $("fastestEta").textContent=Math.max(1,Math.round(result.minutes))+" min";
+  $("routeEta").textContent="PICKLE AI · 15 MIN";
+  $("distanceEta").textContent="24 min";
+  $("fastestEta").textContent="15 min";
   requestAnimationFrame(()=>{
-    route.style.transition="stroke-dashoffset 1.45s ease";
+    route.style.transition="stroke-dashoffset 1.3s ease";
     route.style.strokeDashoffset="0";
   });
 }
@@ -762,11 +853,12 @@ function runDispatch(){
   delayed(()=>{status.textContent="PICKLE shuttle staged at Gate 3";panel.classList.add("arrived")},3200);
 }
 
+// PAGE 5: 초기 위치(셔틀 65,75 / 사라 95,235) 도로 시작점에 정확히 배치
 function preparePickupPage(){
   const bus=$('approachingShuttle'),walker=$('walkingSarah'),button=$('pickupCta'),fork=$("pickupForkFlight");
   if(fork)fork.classList.remove("flying");
-  if(bus)bus.setAttribute('transform','translate(20 70)');
-  if(walker)walker.setAttribute('transform','translate(63 276)');
+  if(bus)bus.setAttribute('transform','translate(65 75)');
+  if(walker)walker.setAttribute('transform','translate(95 235)');
   if(button){
     button.disabled=true;
     button.innerHTML='Waiting for PICKLE… <span style="float:right">↗</span>';
@@ -779,6 +871,7 @@ function preparePickupPage(){
   },1200);
 }
 
+// PAGE 5: 도로와 정확히 일치하는 경로를 따라 Gate 3(385, 175)로 이동
 function startPickupAnimation(){
   const busPath=$('vehicleApproachPath'),walkPath=$('sarahWalkPath'),bus=$('approachingShuttle'),walker=$('walkingSarah'),button=$('pickupCta');
   if(!busPath||!walkPath||!bus||!walker||!button)return;
