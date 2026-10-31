@@ -309,7 +309,7 @@ h2 em{color:var(--coral);font-style:normal}
   <div class="trust"><b>✓ Verified students</b><b>✓ Women-only option</b></div>
 </section>
 
-<!-- PAGE 1: 출발/도착 설정 (DROP-OFF를 House로 변경 완료) -->
+<!-- PAGE 1: 출발/도착 설정 (DROP-OFF: House) -->
 <section class="page" id="p1">
   <div class="pnav"><button class="replay" onclick="prevPage()">←</button><div class="miniBrand"><img class="pageBus" src="pickle-vehicle-cutout.png" alt="">Plan your ride</div><div class="avatar">SA</div></div>
   <div class="eyebrow">MONDAY · AFTER YOUR LAST CLASS</div>
@@ -328,13 +328,13 @@ h2 em{color:var(--coral);font-style:normal}
   <p class="secure">Shared rides · Verified UAEU students only</p>
 </section>
 
-<!-- PAGE 2: 초기 A* 경로 탐색 (도로와 경로 선 완벽 일치) -->
+<!-- PAGE 2: 초기 A* 경로 탐색 (거리우선 1 hr -> 최적 45 min) -->
 <section class="page" id="p2">
   <div class="pnav"><button class="replay" onclick="prevPage()">←</button><div class="miniBrand"><img class="pageBus" src="pickle-vehicle-cutout.png" alt="PICKLE bus">AI route planner</div><div class="live">A* ROUTE</div></div>
   <div class="eyebrow">STEP 1 / 3 · AI FASTEST ROUTE</div>
   <h2>Fastest way to <em>House.</em></h2>
   <div class="bigMap">
-    <div class="mapTopline"><span>UAEU → HOUSE</span><b id="routeEta">AI ETA · -- MIN</b></div>
+    <div class="mapTopline"><span>UAEU → HOUSE</span><b id="routeEta">PICKLE AI · 45 MIN</b></div>
     <svg id="liveMapSvg" viewBox="0 0 560 320" preserveAspectRatio="xMidYMid meet">
       <defs>
         <pattern id="paperDots" width="36" height="36" patternUnits="userSpaceOnUse"><circle cx="5" cy="6" r="1.2" fill="#d5cbb8" opacity=".4"/><path d="M26 8l1.5 3 3 1-3 1.5-1.5 3-1-3-3-1.5 3-1z" fill="#d7cbaa" opacity=".45"/></pattern>
@@ -378,7 +378,7 @@ h2 em{color:var(--coral);font-style:normal}
   </div>
   <div id="routeStatus" class="routeInsight routeCompare">
     <div class="routeCompareHead"><b>AI compares travel time across routes</b><span>SIMULATED CAMPUS TRAFFIC</span></div>
-    <div class="routeCompareOptions"><div><small>DISTANCE-FIRST</small><b id="distanceEta">-- min</b></div><i>→</i><div class="routeCompareBest"><small>PICKLE AI · FASTEST</small><b id="fastestEta">-- min</b></div></div>
+    <div class="routeCompareOptions"><div><small>DISTANCE-FIRST</small><b id="distanceEta">1 hr</b></div><i>→</i><div class="routeCompareBest"><small>PICKLE AI · FASTEST</small><b id="fastestEta">45 min</b></div></div>
     <div class="routeCompareNote">Avoids congestion before the shuttle is assigned.</div>
   </div>
   <button class="bigbtn" onclick="go(3)">Place PICKLE vehicle <span style="float:right">↗</span></button>
@@ -484,7 +484,6 @@ h2 em{color:var(--coral);font-style:normal}
   <p class="bodycopy">2 matched classmates are aboard. Sarah walks 3 minutes to the same pickup stop.</p>
   <div class="pickupmap">
     <div class="pickupLegend"><span><i class="busKey"></i>Shuttle approaching</span><span><i class="walkKey"></i>Sarah walking (3 min)</span></div>
-    <!-- 단일 와이드 SVG (560x280, meet)로 지도 잘림 방지 및 도로-경로 완벽 정렬 -->
     <svg viewBox="0 0 560 280" preserveAspectRatio="xMidYMid meet" aria-label="Map showing PICKLE shuttle and Sarah meeting at Gate 3">
       <rect width="560" height="280" fill="#e8eadf"/>
       <!-- 주변 캠퍼스 블록 장식 -->
@@ -493,13 +492,10 @@ h2 em{color:var(--coral);font-style:normal}
         <rect x="230" y="48" width="120" height="52" rx="10"/>
         <rect x="440" y="65" width="90" height="70" rx="10"/>
       </g>
-      <!-- 배경 도로 테두리 (이동 경로와 100% 동일한 좌표 포함) -->
+      <!-- 배경 도로 테두리 -->
       <g fill="none" stroke="#d5d9cc" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
-        <!-- 셔틀 진입 도로 -->
         <path d="M 65 75 C 165 75, 225 145, 385 175"/>
-        <!-- 사라 보행자 도로 -->
         <path d="M 95 235 C 205 235, 285 205, 385 175"/>
-        <!-- Gate 3 이후 출구 도로 -->
         <path d="M 385 175 L 535 175"/>
         <path d="M 385 40 L 385 265"/>
       </g>
@@ -518,7 +514,7 @@ h2 em{color:var(--coral);font-style:normal}
       <circle cx="95" cy="235" r="7" fill="#e77960"/>
       <circle cx="385" cy="175" r="22" fill="#39786f" opacity=".16"/>
       <circle cx="385" cy="175" r="12" fill="#39786f" stroke="#fffdf8" stroke-width="4"/>
-      <!-- 지도 내부 라벨 (잘리지 않는 안전 위치에 고정) -->
+      <!-- 지도 내부 라벨 -->
       <g font-family="DM Sans" font-size="11" font-weight="800">
         <rect x="28" y="244" width="136" height="24" rx="7" fill="#fffdf2" stroke="#e2dac8"/>
         <text x="40" y="260" fill="#202a27">Sarah · UAEU campus</text>
@@ -550,7 +546,7 @@ h2 em{color:var(--coral);font-style:normal}
   <button class="bigbtn" id="pickupCta" onclick="startOnBoardAlns()" disabled>Waiting for PICKLE… <span style="float:right">↗</span></button>
 </section>
 
-<!-- PAGE 6: On Board 이후 A* + ALNS 실시간 경로 수정 (560x320 와이드 뷰, 도로-경로 100% 일치) -->
+<!-- PAGE 6: On Board 이후 A* + ALNS 실시간 경로 수정 (Jammed 45 min -> Repaired 37 min) -->
 <section class="page" id="p6">
   <div class="pnav"><button class="replay" onclick="prevPage()">←</button><div class="miniBrand"><img class="pageBus" src="pickle-vehicle-cutout.png" alt="PICKLE bus">ALNS live reroute</div><div class="live" id="alnsBadge" style="background:#e77960">LIVE TRAFFIC</div></div>
   <div class="eyebrow">ON BOARD · DYNAMIC A* + ALNS OPTIMIZATION</div>
@@ -617,7 +613,7 @@ h2 em{color:var(--coral);font-style:normal}
   </div>
   <div class="routeInsight routeCompare">
     <div class="routeCompareHead"><b id="alnsStepStatus">Destroy & Greedy Repair in progress…</b><span>A* + ALNS ENGINE</span></div>
-    <div class="routeCompareOptions"><div><small>JAMMED ROUTE</small><b id="jammedEta">25 min</b></div><i>→</i><div class="routeCompareBest" style="background:#2F6F6A"><small>ALNS REPAIRED</small><b id="repairedEta">14 min (-11m)</b></div></div>
+    <div class="routeCompareOptions"><div><small>JAMMED ROUTE</small><b id="jammedEta">45 min</b></div><i>→</i><div class="routeCompareBest" style="background:#2F6F6A"><small>ALNS REPAIRED</small><b id="repairedEta">37 min (-8m)</b></div></div>
     <div class="routeCompareNote" id="alnsNote">Click 'Trigger Traffic + ALNS' or proceed to destination.</div>
   </div>
   <div style="display:flex;gap:10px;margin-top:auto">
@@ -644,7 +640,6 @@ h2 em{color:var(--coral);font-style:normal}
 
 </div></div></section></main>
 <script>
-// Page 2 & Page 6 배경 도로와 100% 일치하는 그래프 노드 좌표 (560x320)
 const ROAD={
   G:{x:60,y:265},
   C:{x:115,y:235},
@@ -673,7 +668,6 @@ function pathD(nodes){return nodes.map((n,i)=>`${i?'L':'M'}${ROAD[n].x} ${ROAD[n
 let rideMode='any',page=0,timers=[],vehicleProgress=0,rideStarted=false,routeFrame=0,pickupFrame=0,alnsFrame=0,alnsVariant=0,voicePlayedOnce=false;
 const $=id=>document.getElementById(id);
 
-// 1. 전체화면(Fullscreen) 요청 및 화면 꽉 채우기 스케일링
 function requestAppFullScreen(){
   const el=document.documentElement;
   if(!document.fullscreenElement && !document.webkitFullscreenElement){
@@ -694,7 +688,6 @@ function enterFullScreenAndNext(){
   requestAppFullScreen();
   nextPage();
 }
-// 페이지 첫 클릭 시 전체화면 자동 시도
 window.addEventListener('pointerdown',function autoFsOnFirstTap(){
   requestAppFullScreen();
 },{once:true});
@@ -706,7 +699,6 @@ function fitPhone(){
   const widths=[rect.width,window.innerWidth,document.documentElement.clientWidth,vv?.width].filter(v=>Number.isFinite(v)&&v>0);
   const heights=[rect.height,window.innerHeight,document.documentElement.clientHeight,vv?.height].filter(v=>Number.isFinite(v)&&v>0);
   const w=Math.min(...widths),h=Math.min(...heights);
-  // 화면 여백을 최소화하고 꽉 차게 보이도록 스케일 제한 해제
   const scale=Math.max(.1,Math.min((w-8)/630,(h-8)/840));
   frame.style.setProperty('--phone-scale',scale.toFixed(4));
 }
@@ -820,6 +812,7 @@ function runMatch(){
   });
 }
 
+// AI route planner (#p2): 거리우선 1 hr, 최적 경로 45 min 반영
 function runOptimizer(){
   const route=$("expressRoute"),bus=$("fastBus");
   const initialCorridor=['G','C','N','B','M','J','K','H'];
@@ -830,9 +823,9 @@ function runOptimizer(){
   route.style.transition="none";
   route.style.strokeDasharray=String(length);
   route.style.strokeDashoffset=String(length);
-  $("routeEta").textContent="PICKLE AI · 15 MIN";
-  $("distanceEta").textContent="24 min";
-  $("fastestEta").textContent="15 min";
+  $("routeEta").textContent="PICKLE AI · 45 MIN";
+  $("distanceEta").textContent="1 hr";
+  $("fastestEta").textContent="45 min";
   requestAnimationFrame(()=>{
     route.style.transition="stroke-dashoffset 1.3s ease";
     route.style.strokeDashoffset="0";
@@ -853,7 +846,6 @@ function runDispatch(){
   delayed(()=>{status.textContent="PICKLE shuttle staged at Gate 3";panel.classList.add("arrived")},3200);
 }
 
-// PAGE 5: 초기 위치(셔틀 65,75 / 사라 95,235) 도로 시작점에 정확히 배치
 function preparePickupPage(){
   const bus=$('approachingShuttle'),walker=$('walkingSarah'),button=$('pickupCta'),fork=$("pickupForkFlight");
   if(fork)fork.classList.remove("flying");
@@ -871,7 +863,6 @@ function preparePickupPage(){
   },1200);
 }
 
-// PAGE 5: 도로와 정확히 일치하는 경로를 따라 Gate 3(385, 175)로 이동
 function startPickupAnimation(){
   const busPath=$('vehicleApproachPath'),walkPath=$('sarahWalkPath'),bus=$('approachingShuttle'),walker=$('walkingSarah'),button=$('pickupCta');
   if(!busPath||!walkPath||!bus||!walker||!button)return;
@@ -907,19 +898,20 @@ function startOnBoardAlns(){
   go(6);
 }
 
+// ALNS live reroute (#p6): Jammed 45 min -> Repaired 37 min (-8m) 반영
 const ALNS_SCENARIOS=[
   {
     jamPath:['B','M','J','K'],
     repairedPath:['G','C','N','Y','J','Z','K','H'],
-    jamMin:25,
-    repMin:14,
+    jamMin:45,
+    repMin:37,
     desc:'Jam on M→J→K! ALNS destroyed congested stops & repaired via Bypass Y → Z.'
   },
   {
     jamPath:['C','N','B'],
     repairedPath:['G','X','Y','N','B','Y','J','Z','K','H'],
-    jamMin:27,
-    repMin:15,
+    jamMin:45,
+    repMin:37,
     desc:'Sudden slowdown near Gate C! A* updated weights & ALNS rerouted via X → Y.'
   }
 ];
@@ -936,8 +928,10 @@ function runDynamicAlnsPage(){
 
   $('alnsTitle').innerHTML='On board. <em>Monitoring traffic…</em>';
   $('alnsCopy').textContent='Shuttle departed Gate 3 with Sarah + 2 riders. Live road weights are monitored.';
-  $('alnsEtaBadge').innerHTML='<i></i>INITIAL ROUTE · 16 MIN';
+  $('alnsEtaBadge').innerHTML='<i></i>INITIAL ROUTE · 45 MIN';
   $('alnsStepStatus').textContent='1 · Moving along initial A* corridor';
+  $('jammedEta').textContent=sc.jamMin+' min';
+  $('repairedEta').textContent=`${sc.repMin} min (-${sc.jamMin-sc.repMin}m)`;
 
   delayed(()=>{
     if(page!==6)return;
@@ -946,7 +940,7 @@ function runDynamicAlnsPage(){
     $('alnsBadge').textContent='ALNS REROUTING';
     $('alnsTitle').innerHTML='Congestion ahead! <em>A* + ALNS fixing…</em>';
     $('alnsCopy').textContent='Heavy traffic detected on red dashed edges. Running A* matrix update & ALNS Destroy/Repair…';
-    $('alnsEtaBadge').innerHTML='<i></i>TRAFFIC SPIKE · '+sc.jamMin+' MIN';
+    $('alnsEtaBadge').innerHTML='<i></i>JAMMED ROUTE · '+sc.jamMin+' MIN';
     $('alnsStepStatus').textContent='2 · ALNS Destroy(congested nodes) → Greedy Repair';
     $('jammedEta').textContent=sc.jamMin+' min';
   },1200);
