@@ -1009,4 +1009,41 @@ function resetDemo(){
 
 refitPhone();
 go(0);
+// 엔터(Enter) 키로 모든 화면/팝업 진행 + 마지막 페이지에서 발표 슬라이드로 이동
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  e.preventDefault(); // 버튼 포커스로 인해 두 번 넘어가는 현상 방지
+
+  if (page === 0) {
+    enterFullScreenAndNext();
+  } else if (page === 1) {
+    go(2);
+  } else if (page === 2) {
+    go(3);
+  } else if (page === 3) {
+    go(4);
+  } else if (page === 4) {
+    // 매칭 팝업이 떠 있으면 닫고 5페이지로, 아직 안 떠 있으면 매칭 팝업(+음성) 띄우기
+    if ($('matchPop').classList.contains('show')) {
+      dismissMatch();
+    } else {
+      announceMatch();
+    }
+  } else if (page === 5) {
+    // 3분 전 출발 팝업이 떠 있으면 도보 애니메이션 시작, 도보 중/완료 후 엔터 누르면 ALNS 화면으로 이동
+    if ($('walkOutPop').classList.contains('show')) {
+      dismissWalkOutPop();
+    } else if ($('pickupStatusBadge').textContent === '3 MIN AWAY') {
+      clearTimers();
+      $('walkOutPop').classList.add('show');
+    } else {
+      go(6);
+    }
+  } else if (page === 6) {
+    go(7);
+  } else if (page === 7) {
+    // 마지막 완료 페이지에서 엔터를 누르면 지정한 Claude 슬라이드 주소로 이동
+    window.location.href = 'https://claude.ai/artifact/DsSEXcZJ6sPetMMUv3YqF5#slide-56929fb07aab';
+  }
+});
 </script></body></html>
